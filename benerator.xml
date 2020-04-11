@@ -2,6 +2,7 @@
 <setup xmlns="http://databene.org/benerator/0.9.8"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://databene.org/benerator/0.9.8 benerator-0.9.8.xsd"
+        defaultPageSize="1000"
         defaultEncoding="Cp1252"
         defaultDataset="US"
         defaultLocale="en_US"
@@ -10,6 +11,8 @@
 	<comment>
 		 Populates a database
 	</comment>
+	 
+	<include uri="benerator.properties" />
 	 
     <database id="db"
         url="jdbc:sqlserver://LNAR-PC0S7WA5\\JACKSON:1433;databaseName=AdventureWorksDW2016"
@@ -123,41 +126,43 @@ REFERENCES [datagen].[DimProductSubcategory] ([SubcategoryKey])
 		</generate>
 	</generate>
 -->
+
+	<generate type="DimProductCategory" consumer="db" minCount="150" maxCount="200">
+<!--
 	<generate type="DimProductCategory" consumer="db" minCount="1" maxCount="1">
-<!--	<generate type="DimProductCategory" consumer="db" minCount="150" maxCount="200">-->
+-->
 		<id name="CategoryKey" generator="LocalSequenceGenerator" />
   		<attribute name="Category" pattern="[A-Z]{1}[a-z]{6,10}"/>
+		<generate type="DimProductSubcategory" consumer="db" minCount="15" maxCount="25">
+<!--
 		<generate type="DimProductSubcategory" consumer="db" minCount="1" maxCount="1">
-<!--		<generate type="DimProductSubcategory" consumer="db" minCount="15" maxCount="25">-->
+-->
 			<id name="SubcategoryKey" generator="LocalSequenceGenerator" />
 			<attribute name="CategoryKey" script="{DimProductCategory.CategoryKey}"/>
 			<attribute name="Subcategory" pattern="[A-Z]{1}[a-z]{6,10}"/>
+			<generate type="DimProduct" consumer="db" minCount="15" maxCount="25">
+<!--
 			<generate type="DimProduct" consumer="db" minCount="1" maxCount="1">
-<!--			<generate type="DimProduct" consumer="db" minCount="15" maxCount="25">-->
+-->
 				<id name="ProductKey" generator="LocalSequenceGenerator" />
 				<attribute name="SubcategoryKey" script="{DimProductSubcategory.SubcategoryKey}"/>
 				<attribute name="Product" pattern="[A-Z]{1}[a-z]{14,20}"/>
-				<attribute name="BrandKey" values="0"/>
-				<attribute name="ModelKey" values="0"/>
+				<attribute name="BrandKey" pattern="{brand_key_pattern}"/>
+				<attribute name="ModelKey" pattern="{model_key_pattern}"/>
 			</generate>
 		</generate>
 	</generate>
 	
-		<generate type="DimBrand" consumer="db" minCount="1" maxCount="1">
-<!--		<generate type="DimBrand" consumer="db" minCount="3" maxCount="5">-->
-			<id name="BrandKey" generator="LocalSequenceGenerator" />
+		<generate type="DimBrand" consumer="db" minCount="40" maxCount="40">
+			<!-- <id name="BrandKey" generator="LocalSequenceGenerator" /> -->
+  			<attribute name="BrandKey" unique="true" pattern="{brand_key_pattern}"/>
   			<attribute name="Brand" pattern="[A-Z]{1}[a-z]{6,10}"/>
-  			<iterate type="datagen.DimProduct" source='db' consumer="db.updater()">
-				<attribute name="BrandKey" source="db"
-					selector="{{ftl:select BrandKey from datagen.DimBrand where BrandKey = ${DimBrand.BrandKey}}}"
-					 />
-  			</iterate>
 		</generate>
-	
+
   			
-		<generate type="DimModel" consumer="db" minCount="1" maxCount="1">
-<!--		<generate type="DimModel" consumer="db" minCount="1" maxCount="3">-->
-			<id name="ModelKey" generator="LocalSequenceGenerator" />
+		<generate type="DimModel" consumer="db" minCount="20" maxCount="20">
+			<!-- <id name="ModelKey" generator="LocalSequenceGenerator" /> -->
+  			<attribute name="ModelKey" unique="true" pattern="{model_key_pattern}"/>
   			<attribute name="Model" pattern="[A-Z]{1}[a-z]{6,10}"/>
 		</generate>
 	

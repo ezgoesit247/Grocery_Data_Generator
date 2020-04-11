@@ -82,9 +82,9 @@
                     <descriptor>benerator.xml</descriptor>
                     <encoding>Cp1252</encoding>
                     <validate>true</validate>
-                    <dbUrl>jdbc:jtds:sqlserver://LNAR-PC0S7WA5:1433/datagen</dbUrl>
-                    <dbDriver>net.sourceforge.jtds.jdbc.Driver</dbDriver>
-                    <dbSchema>dbo</dbSchema>
+                    <dbUrl>jdbc:sqlserver://LNAR-PC0S7WA5\\JACKSON:1433;databaseName=AdventureWorksDW2016</dbUrl>
+                    <dbDriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</dbDriver>
+                    <dbSchema>datagen</dbSchema>
                     <dbUser>datagen</dbUser>
                     <dbPassword>P@ssw0rd!</dbPassword>
                 </configuration>
