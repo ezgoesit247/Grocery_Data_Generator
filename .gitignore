@@ -1,3 +1,5 @@
 /target/
 bin 
 grocery_categories.csv
+LocalSequenceGenerator.properties
+benerator.out.xml

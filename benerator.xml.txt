@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup xmlns="http://databene.org/benerator/0.9.8"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://databene.org/benerator/0.9.8 benerator-0.9.8.xsd"
+        defaultPageSize="1000"
+        defaultEncoding="Cp1252"
+        defaultDataset="US"
+        defaultLocale="en_US"
+        defaultLineSeparator="\r\n">
+
+	<comment>
+		 Populates a database
+	</comment>
+	 
+	<include uri="benerator.properties" />
+	 
+    <database id="db"
+        url="jdbc:sqlserver://LNAR-PC0S7WA5\\JACKSON:1433;databaseName=AdventureWorksDW2016"
+        driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
+		catalog="AdventureWorksDW2016"
+        schema="datagen"
+        user="datagen"
+        password="P@ssw0rd!"
+        batch="true"/>
+
+	<comment>Creating tables</comment>
+	<execute target="db" >
+DROP TABLE IF EXISTS [datagen].[Sales]
+DROP TABLE IF EXISTS [datagen].[DimProduct]
+DROP TABLE IF EXISTS [datagen].[DimProductSubcategory]
+DROP TABLE IF EXISTS [datagen].[DimProductCategory]
+DROP TABLE IF EXISTS [datagen].[DimBrand]
+DROP TABLE IF EXISTS [datagen].[DimModel]
+DROP TABLE IF EXISTS [datagen].[DimPromotion]
+DROP TABLE IF EXISTS [datagen].[DimCurrency]
+DROP TABLE IF EXISTS [datagen].[DimCustomer]
+DROP TABLE IF EXISTS [datagen].[DimDate]
+DROP TABLE IF EXISTS [datagen].[DimGeography]
+DROP TABLE IF EXISTS [datagen].[DimSalesTerritory]
+
+/*DimBrand*/
+CREATE TABLE [datagen].[DimBrand](
+	[BrandKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
+	[Brand] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PKdatagen_DimBrand_BrandKey] PRIMARY KEY CLUSTERED 
+(
+	[BrandKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+  INSERT INTO [datagen].[DimBrand] (BrandKey,Brand) VALUES (0,'No Brand')
+  
+/*DimModel*/
+CREATE TABLE [datagen].[DimModel](
+	[ModelKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
+	[Model] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PKdatagen_DimModel_ModelKey] PRIMARY KEY CLUSTERED 
+(
+	[ModelKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+  INSERT INTO [datagen].[DimModel] (ModelKey,Model) VALUES (0,'No Model')
+
+/*DimProductCategory*/
+CREATE TABLE [datagen].[DimProductCategory](
+	[CategoryKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
+	[Category] [nvarchar](50) NOT NULL,
+ CONSTRAINT [PKdatagen_DimProductCategory_ProductCategoryKey] PRIMARY KEY CLUSTERED 
+(
+	[CategoryKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+/*DimProductSubcategory*/
+CREATE TABLE [datagen].[DimProductSubcategory](
+	[SubcategoryKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
+	[Subcategory] [nvarchar](50) NOT NULL,
+	[CategoryKey] [int] NOT NULL,
+ CONSTRAINT [PKdatagen_DimProductSubcategory_ProductSubcategoryKey] PRIMARY KEY CLUSTERED 
+(
+	[SubcategoryKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+ALTER TABLE [datagen].[DimProductSubcategory]  WITH CHECK ADD  CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory] FOREIGN KEY([CategoryKey])
+REFERENCES [datagen].[DimProductCategory] ([CategoryKey])
+
+/*DimProduct*/
+CREATE TABLE [datagen].[DimProduct](
+	[ProductKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
+	[SubcategoryKey] [int] NOT NULL,
+	[StandardCost] [decimal](9,4) NULL,
+	[ListPrice] [decimal](9,4) NULL,
+	[Product] [nvarchar](50) NOT NULL,
+	--[FinishedGoodsFlag] [bit] NOT NULL,
+	--[Color] [nvarchar](15) NOT NULL,
+	--[ProductLine] [nchar](2) NULL,
+	[BrandKey] [int] NOT NULL DEFAULT 0,
+	[ModelKey] [int] NULL DEFAULT 0,
+	[Size] [decimal](9,4) NULL,
+	[SizeUnitMeasureCode] [nchar](3) NULL,
+	[Weight] [decimal](9,4) NULL,
+	[WeightUnitMeasureCode] [nchar](3) NULL,
+	--[Description] [nvarchar](400) NULL,
+	--[Status] [nvarchar](7) NULL,
+ CONSTRAINT [PKdatagen_DimProduct_ProductKey] PRIMARY KEY CLUSTERED 
+(
+	[ProductKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+ALTER TABLE [datagen].[DimProduct]  WITH CHECK ADD  CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory] FOREIGN KEY([SubcategoryKey])
+REFERENCES [datagen].[DimProductSubcategory] ([SubcategoryKey])
+
+	</execute>
+<!--
+	<generate type="Parent" consumer="db" count="100">
+		<id name="id" />
+		<attribute name="n" min="1" max="42" distribution="cumulated"/>
+
+		<generate type="Child" consumer="db" count="3">
+			<id name="id" mode="ignored" />
+			<attribute name="pid" script="{Parent.id}"/>
+			<attribute name="name" pattern="[A-Z]{1}[a-z]{4,10} {1}[A-Z]{1}[a-z]{10,16}"/>
+		</generate>
+	</generate>
+-->
+
+	<generate type="DimProductCategory" consumer="db" minCount="150" maxCount="200">
+<!--
+	<generate type="DimProductCategory" consumer="db" minCount="1" maxCount="1">
+-->
+		<id name="CategoryKey" generator="LocalSequenceGenerator" />
+  		<attribute name="Category" pattern="[A-Z]{1}[a-z]{6,10}"/>
+		<generate type="DimProductSubcategory" consumer="db" minCount="15" maxCount="25">
+<!--
+		<generate type="DimProductSubcategory" consumer="db" minCount="1" maxCount="1">
+-->
+			<id name="SubcategoryKey" generator="LocalSequenceGenerator" />
+			<attribute name="CategoryKey" script="{DimProductCategory.CategoryKey}"/>
+			<attribute name="Subcategory" pattern="[A-Z]{1}[a-z]{6,10}"/>
+			<generate type="DimProduct" consumer="db" minCount="15" maxCount="25">
+<!--
+			<generate type="DimProduct" consumer="db" minCount="1" maxCount="1">
+-->
+				<id name="ProductKey" generator="LocalSequenceGenerator" />
+				<attribute name="SubcategoryKey" script="{DimProductSubcategory.SubcategoryKey}"/>
+				<attribute name="Product" pattern="[A-Z]{1}[a-z]{14,20}"/>
+				<attribute name="BrandKey" pattern="{brand_key_pattern}"/>
+				<attribute name="ModelKey" pattern="{model_key_pattern}"/>
+			</generate>
+		</generate>
+	</generate>
+	
+		<generate type="DimBrand" consumer="db" minCount="40" maxCount="40">
+			<!-- <id name="BrandKey" generator="LocalSequenceGenerator" /> -->
+  			<attribute name="BrandKey" unique="true" pattern="{brand_key_pattern}"/>
+  			<attribute name="Brand" pattern="[A-Z]{1}[a-z]{6,10}"/>
+		</generate>
+
+  			
+		<generate type="DimModel" consumer="db" minCount="20" maxCount="20">
+			<!-- <id name="ModelKey" generator="LocalSequenceGenerator" /> -->
+  			<attribute name="ModelKey" unique="true" pattern="{model_key_pattern}"/>
+  			<attribute name="Model" pattern="[A-Z]{1}[a-z]{6,10}"/>
+		</generate>
+	
+
+
+</setup>
