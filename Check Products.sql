@@ -1,4 +1,20 @@
 
+/**
+	COUNTS FOR MODEL BRANDS AND VENDOR
+**/
+select [Label],[vmin],[vmax],[cnt] FROM (
+	select '[VendorKey]' [Label],MIN([VendorKey]) [vmin],MAX([VendorKey]) [vmax], count(*) [cnt]
+	from [datagen].[DimVendor]
+UNION ALL
+	select '[BrandKey]',MIN([BrandKey]),MAX([BrandKey]), count(*)
+	from [datagen].[DimBrand]
+UNION ALL
+	select '[ModelKey]',MIN([ModelKey]),MAX([ModelKey]), count(*)
+	from [datagen].[DimModel]
+) t 
+
+
+
 /****** 
 	CHECK ON BRANDS MODELS
 ******/
