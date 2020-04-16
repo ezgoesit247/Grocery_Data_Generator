@@ -3,156 +3,39 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.capgemini.datagen</groupId>
 	<artifactId>Grocery_Data_Generator</artifactId>
 	<version>1.0-SNAPSHOT</version>
+    <parent>
+	  <groupId>com.capgemini.datagen</groupId>
+	  <artifactId>DataGenParent</artifactId>
+    <relativePath>../Data Gen/pom.xml</relativePath>
+	  <version>0.0.1-SNAPSHOT</version>
+    </parent>
 
-  <repositories>
-  	<repository>
-  		<id>benerator-repo</id>
-  		<url>http://databene.org/m2/</url>
-  	</repository>
-  </repositories>
-  
     <properties>
-    	<jdbacl_version>0.8.19</jdbacl_version>
-    	<version.dependencies.webdecs>0.7.1</version.dependencies.webdecs>
-    	<commons_version>1.0.11</commons_version>
-    	<contiperf_version>2.3.4</contiperf_version>
-    	<version.dependencies.dbsanity>0.9.4</version.dependencies.dbsanity>
-    	<formats_version>1.0.14</formats_version>
-    	<validation_version>1.1.0.Final</validation_version>
-    	<slf4j-api_version>1.7.30</slf4j-api_version>
-    	<junit_version>4.12</junit_version>
-    	<freemarker_version>2.3.21</freemarker_version>
+    	<descriptor.filename>benerator.test.xml</descriptor.filename>
     </properties>
 
 	<packaging>jar</packaging>
 	<name>sqlserverdatagen data generation project</name>
 	<description>Start populating the database by typing 'mvn benerator:generate' on the command line.</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.databene</groupId>
-			<artifactId>dbsanity</artifactId>
-			<version>${version.dependencies.dbsanity}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.databene</groupId>
-			<artifactId>jdbacl</artifactId>
-			<version>${jdbacl_version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.databene</groupId>
-			<artifactId>databene-webdecs</artifactId>
-			<version>${version.dependencies.webdecs}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.databene</groupId>
-			<artifactId>databene-commons</artifactId>
-			<version>${commons_version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.databene</groupId>
-			<artifactId>contiperf</artifactId>
-			<version>${contiperf_version}</version>
-		</dependency>
-	</dependencies>
-
 	<build>
-
 		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-					<source>1.8</source>
-					<target>1.8</target>
-				</configuration>
-			</plugin>
-
             <plugin>
                 <groupId>org.databene</groupId>
                 <artifactId>benerator-maven-plugin</artifactId>
                 <version>0.9.8</version>
                 <configuration>
-                    <descriptor>benerator.xml</descriptor>
-                    <encoding>Cp1252</encoding>
-                    <validate>true</validate>
-                    <dbUrl>jdbc:sqlserver://LNAR-PC0S7WA5\\JACKSON:1433;databaseName=AdventureWorksDW2016</dbUrl>
-                    <dbDriver>com.microsoft.sqlserver.jdbc.SQLServerDriver</dbDriver>
-                    <dbSchema>datagen</dbSchema>
-                    <dbUser>datagen</dbUser>
-                    <dbPassword>P@ssw0rd!</dbPassword>
+                    <descriptor>${descriptor.filename}</descriptor>
                 </configuration>
                 
                 <dependencies>
-					<!-- Since Oracle's drivers are proprietary, you need to install them yourself.
-					You can download these at http://www.oracle.com/technology/software/tech/java/sqlj_jdbc/index.html
-                    <dependency>
-                        <groupId>com.oracle</groupId>
-                        <artifactId>ojdbc6</artifactId>
-                        <version>11.1.0.7</version>
-                        <scope>provided</scope>
-                    </dependency> -->
-
-					<!-- Since the DB2 driver is proprietary, you need to install it yourself.
-					You can download it at http://www-306.ibm.com/software/data/db2/java
-                    <dependency>
-                        <groupId>com.ibm</groupId>
-                        <artifactId>db2jcc</artifactId>
-                        <version>3.50.152</version>
-                        <scope>provided</scope>
-                    </dependency> -->
-
-
-<!-- MS SQL server and Sybase
-                    <dependency>
-                        <groupId>net.sourceforge.jtds</groupId>
-                        <artifactId>jtds</artifactId>
-                        <version>1.2.2</version>
-                        <scope>runtime</scope>
-                    </dependency>
- -->
 					<dependency>
 						<groupId>com.microsoft.sqlserver</groupId>
 						<artifactId>mssql-jdbc</artifactId>
 						<version>8.2.2.jre8</version>
 					</dependency>
-                    <dependency>
-                        <groupId>hsqldb</groupId>
-                        <artifactId>hsqldb</artifactId>
-                        <version>1.8.0.7</version>
-                        <scope>runtime</scope>
-                    </dependency>
-					<dependency>
-					    <groupId>com.h2database</groupId>
-					    <artifactId>h2</artifactId>
-					    <version>1.2.132</version>
-                        <scope>runtime</scope>
-					</dependency>
-                    <dependency>
-                        <groupId>org.apache.derby</groupId>
-                        <artifactId>derbyclient</artifactId>
-                        <version>10.4.2.0</version>
-                        <scope>runtime</scope>
-                    </dependency>
-					<dependency>
-					    <groupId>net.sf.squirrel-sql.thirdparty-non-maven</groupId>
-					    <artifactId>jaybird</artifactId>
-					    <version>2.1.6</version>
-                        <scope>runtime</scope>
-					</dependency>
-                    <dependency>
-                        <groupId>postgresql</groupId>
-                        <artifactId>postgresql</artifactId>
-                        <version>8.3-603.jdbc4</version>
-                        <scope>runtime</scope>
-                    </dependency>
-
                     <dependency>
                         <groupId>org.apache.poi</groupId>
                         <artifactId>poi</artifactId>
@@ -179,8 +62,7 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
-		</plugins>
-	</build>
+            </plugins>
+            </build>
 
 </project>
