@@ -8,7 +8,7 @@
     <parent>
 	  <groupId>com.capgemini.datagen</groupId>
 	  <artifactId>DataGenParent</artifactId>
-    <relativePath>../Data Gen/pom.xml</relativePath>
+    <relativePath>../DataGenParent/pom.xml</relativePath>
 	  <version>0.0.1-SNAPSHOT</version>
     </parent>
 

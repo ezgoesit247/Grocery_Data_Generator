@@ -18,7 +18,7 @@
     	<property name="timeDistribution" value="{new CumulatedSequence()}"/>
 	</bean>
 	
-    <generate type="test" count="10">
+    <generate type="test" count="11">
         <attribute name="date" type="date" source="datetime_gen"/>
         <consumer class="org.databene.benerator.consumer.ConsoleExporter"/>
     </generate>

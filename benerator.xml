@@ -15,11 +15,11 @@
 	<include uri="benerator.properties" />
 	 
     <database id="db"
-        url="jdbc:sqlserver://LNAR-PC0S7WA5\\JACKSON:1433;databaseName=AdventureWorksDW2016"
+        url="jdbc:sqlserver://host.docker.internal\\b95217afe721:1433;databaseName=AdventureWorksDW2016"
         driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
 		catalog="AdventureWorksDW2016"
         schema="datagen"
-        user="datagen"
+        user="sa"
         password="P@ssw0rd!"
         batch="true"/>
 
