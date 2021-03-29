@@ -1,22 +1,23 @@
-DROP TABLE IF EXISTS [datagen].[Sales]
-DROP TABLE IF EXISTS [datagen].[ModelVendor]
-DROP TABLE IF EXISTS [datagen].[VendorBrand]
-DROP TABLE IF EXISTS [datagen].[DimProduct]
-DROP TABLE IF EXISTS [datagen].[DimProductSubcategory]
-DROP TABLE IF EXISTS [datagen].[DimProductCategory]
-DROP TABLE IF EXISTS [datagen].[DimVendor]
-DROP TABLE IF EXISTS [datagen].[DimBrand]
-DROP TABLE IF EXISTS [datagen].[DimModel]
-DROP TABLE IF EXISTS [datagen].[DimPromotion]
-DROP TABLE IF EXISTS [datagen].[DimCurrency]
-DROP TABLE IF EXISTS [datagen].[DimCustomer]
-DROP TABLE IF EXISTS [datagen].[DimDate]
-DROP TABLE IF EXISTS [datagen].[DimGeography]
-DROP TABLE IF EXISTS [datagen].[DimSalesTerritory]
+DROP TABLE IF EXISTS [Sales]
+DROP TABLE IF EXISTS [VendorModel]
+DROP TABLE IF EXISTS [VendorModel]
+DROP TABLE IF EXISTS [VendorBrand]
+DROP TABLE IF EXISTS [DimProduct]
+DROP TABLE IF EXISTS [DimProductSubcategory]
+DROP TABLE IF EXISTS [DimProductCategory]
+DROP TABLE IF EXISTS [DimVendor]
+DROP TABLE IF EXISTS [DimBrand]
+DROP TABLE IF EXISTS [DimModel]
+DROP TABLE IF EXISTS [DimPromotion]
+DROP TABLE IF EXISTS [DimCurrency]
+DROP TABLE IF EXISTS [DimCustomer]
+DROP TABLE IF EXISTS [DimDate]
+DROP TABLE IF EXISTS [DimGeography]
+DROP TABLE IF EXISTS [DimSalesTerritory]
 
 
 /*DimBrand*/
-CREATE TABLE [datagen].[DimBrand](
+CREATE TABLE [DimBrand](
 	[BrandKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Brand] [nvarchar](50) NOT NULL,
  CONSTRAINT [PKdatagen_DimBrand_BrandKey] PRIMARY KEY CLUSTERED 
@@ -26,11 +27,11 @@ CREATE TABLE [datagen].[DimBrand](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimBrand] (BrandKey,Brand) VALUES (0,'No Brand')
+  --INSERT INTO [DimBrand] (BrandKey,Brand) VALUES (0,'No Brand')
   
   
 /*DimModel*/
-CREATE TABLE [datagen].[DimModel](
+CREATE TABLE [DimModel](
 	[ModelKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Model] [nvarchar](50) NOT NULL,
  CONSTRAINT [PKdatagen_DimModel_ModelKey] PRIMARY KEY CLUSTERED 
@@ -40,12 +41,12 @@ CREATE TABLE [datagen].[DimModel](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimModel] (ModelKey,Model) VALUES (0,'No Model')
+  --INSERT INTO [DimModel] (ModelKey,Model) VALUES (0,'No Model')
   
 
 
 /*DimVendor*/
-CREATE TABLE [datagen].[DimVendor](
+CREATE TABLE [DimVendor](
 	[VendorKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Vendor] [nvarchar](50) NOT NULL,
 	--[BrandKey] [int] NOT NULL DEFAULT 0,
@@ -57,11 +58,11 @@ CREATE TABLE [datagen].[DimVendor](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimVendor] (VendorKey,Vendor) VALUES (0,'No Vendor')
+  --INSERT INTO [DimVendor] (VendorKey,Vendor) VALUES (0,'No Vendor')
 
 
 /*VendorBrand*/
-CREATE TABLE [datagen].[VendorBrand](
+CREATE TABLE [VendorBrand](
 	[VendorKey] [int] NOT NULL DEFAULT 0,
 	[BrandKey] [int] NOT NULL DEFAULT 0,
  CONSTRAINT [PKdatagen_VendorBrand] PRIMARY KEY CLUSTERED 
@@ -72,20 +73,20 @@ CREATE TABLE [datagen].[VendorBrand](
 ) ON [PRIMARY]
 
 
-/*ModelVendor*/
-CREATE TABLE [datagen].[ModelVendor](
-	[ModelKey] [int] NOT NULL DEFAULT 0,
+/*VendorModel*/
+CREATE TABLE [VendorModel](
 	[VendorKey] [int] NOT NULL DEFAULT 0,
- CONSTRAINT [PKdatagen_ModelVendor] PRIMARY KEY CLUSTERED 
+  [ModelKey] [int] NOT NULL DEFAULT 0,
+ CONSTRAINT [PKdatagen_VendorModel] PRIMARY KEY CLUSTERED 
 (
-	[ModelKey] ASC,
-	[VendorKey] ASC
+	[VendorKey] ASC,
+  [ModelKey] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
   
 
 /*DimProductCategory*/
-CREATE TABLE [datagen].[DimProductCategory](
+CREATE TABLE [DimProductCategory](
 	[CategoryKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Category] [nvarchar](50) NOT NULL,
  CONSTRAINT [PKdatagen_DimProductCategory_ProductCategoryKey] PRIMARY KEY CLUSTERED 
@@ -95,11 +96,11 @@ CREATE TABLE [datagen].[DimProductCategory](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimProductCategory] (CategoryKey,Category) VALUES (0,'No Category')
+  --INSERT INTO [DimProductCategory] (CategoryKey,Category) VALUES (0,'No Category')
   
 
 /*DimProductSubcategory*/
-CREATE TABLE [datagen].[DimProductSubcategory](
+CREATE TABLE [DimProductSubcategory](
 	[SubcategoryKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Subcategory] [nvarchar](50) NOT NULL,
 	[CategoryKey] [int] NOT NULL,
@@ -110,11 +111,11 @@ CREATE TABLE [datagen].[DimProductSubcategory](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimProductSubcategory] (SubcategoryKey,CategoryKey,Subcategory) VALUES (0,0,'No Subcategory')
+  --INSERT INTO [DimProductSubcategory] (SubcategoryKey,CategoryKey,Subcategory) VALUES (0,0,'No Subcategory')
   
 
 /*DimProduct*/
-CREATE TABLE [datagen].[DimProduct](
+CREATE TABLE [DimProduct](
 	[ProductKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[SubcategoryKey] [int] NOT NULL,
 	[StandardCost] [decimal](9,4) NULL,
@@ -138,11 +139,11 @@ CREATE TABLE [datagen].[DimProduct](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimProduct] (ProductKey,SubcategoryKey,Product) VALUES (0,0,'No Product')
+  --INSERT INTO [DimProduct] (ProductKey,SubcategoryKey,Product) VALUES (0,0,'No Product')
   
 
 /*Geography*/
-CREATE TABLE [datagen].[DimGeography](
+CREATE TABLE [DimGeography](
 	[GeographyKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[City] [nvarchar](30) NULL,
 	[StateProvinceCode] [nvarchar](3) NULL,
@@ -158,10 +159,10 @@ CREATE TABLE [datagen].[DimGeography](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [datagen].[DimGeography] (GeographyKey,City,StateProvinceCode,StateProvinceName,CountryRegionCode,CountryRegionName,PostalCode) VALUES (0,'No City','N/A','No State','N/A','No Country','00000')
+  --INSERT INTO [DimGeography] (GeographyKey,City,StateProvinceCode,StateProvinceName,CountryRegionCode,CountryRegionName,PostalCode) VALUES (0,'No City','N/A','No State','N/A','No Country','00000')
   
 
-INSERT INTO [datagen].[DimGeography] (
+INSERT INTO [DimGeography] (
 	[GeographyKey]
 	,[PostalCode]
 	,[City]
@@ -177,7 +178,7 @@ INSERT INTO [datagen].[DimGeography] (
 
   
   /*DimCustomer*/
-CREATE TABLE [datagen].[DimCustomer](
+CREATE TABLE [DimCustomer](
 	[CustomerKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[GeographyKey] [int] NOT NULL,
 	[FirstName] [nvarchar](50) NULL,
@@ -190,11 +191,11 @@ CREATE TABLE [datagen].[DimCustomer](
 
 
 
-  --INSERT INTO [datagen].[DimCustomer] (CustomerKey,GeographyKey,FirstName,LastName) VALUES (0,0,'No First','No Last')
+  --INSERT INTO [DimCustomer] (CustomerKey,GeographyKey,FirstName,LastName) VALUES (0,0,'No First','No Last')
   
 
 /*Sales*/
-CREATE TABLE [datagen].[Sales](
+CREATE TABLE [Sales](
 	[ProductKey] [int] NOT NULL DEFAULT 0,
 	[CustomerKey] [int] NOT NULL DEFAULT 0,
 	[SalesOrderNumber] [nvarchar](20) NOT NULL,
@@ -215,102 +216,102 @@ CREATE TABLE [datagen].[Sales](
 
 
 
-ALTER TABLE [datagen].[VendorBrand]  WITH CHECK 
+ALTER TABLE [VendorBrand]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_VendorBrand_BrandKey] 
 	FOREIGN KEY([BrandKey])
-	REFERENCES [datagen].[DimBrand] ([BrandKey])
+	REFERENCES [DimBrand] ([BrandKey])
 
-ALTER TABLE [datagen].[VendorBrand]  WITH CHECK 
+ALTER TABLE [VendorBrand]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_VendorBrand_VendorKey] 
 	FOREIGN KEY([VendorKey])
-	REFERENCES [datagen].[DimVendor] ([VendorKey])
+	REFERENCES [DimVendor] ([VendorKey])
 
 
-ALTER TABLE [datagen].[ModelVendor]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_ModelVendor_ModelKey] 
+ALTER TABLE [VendorModel]  WITH CHECK 
+	ADD  CONSTRAINT [FKdatagen_VendorModel_ModelKey] 
 	FOREIGN KEY([ModelKey])
-	REFERENCES [datagen].[DimModel] ([ModelKey])
+	REFERENCES [DimModel] ([ModelKey])
 
-ALTER TABLE [datagen].[ModelVendor]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_ModelVendor_VendorKey] 
+ALTER TABLE [VendorModel]  WITH CHECK 
+	ADD  CONSTRAINT [FKdatagen_VendorModel_VendorKey] 
 	FOREIGN KEY([VendorKey])
-	REFERENCES [datagen].[DimVendor] ([VendorKey])
+	REFERENCES [DimVendor] ([VendorKey])
 
-ALTER TABLE [datagen].[DimProductSubcategory]  WITH CHECK 
+ALTER TABLE [DimProductSubcategory]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory] 
 	FOREIGN KEY([CategoryKey])
-	REFERENCES [datagen].[DimProductCategory] ([CategoryKey])
+	REFERENCES [DimProductCategory] ([CategoryKey])
 
 
-ALTER TABLE [datagen].[DimProduct]  WITH CHECK 
+ALTER TABLE [DimProduct]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory] 
 	FOREIGN KEY([SubcategoryKey])
-	REFERENCES [datagen].[DimProductSubcategory] ([SubcategoryKey])
+	REFERENCES [DimProductSubcategory] ([SubcategoryKey])
 
 	
-ALTER TABLE [datagen].[DimProduct]  WITH CHECK 
+ALTER TABLE [DimProduct]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_DimProduct_DimModel] 
 	FOREIGN KEY([ModelKey])
-	REFERENCES [datagen].[DimModel] ([ModelKey])
+	REFERENCES [DimModel] ([ModelKey])
 
 
-ALTER TABLE [datagen].[DimProduct]  WITH CHECK 
+ALTER TABLE [DimProduct]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_DimProduct_DimBrand] 
 	FOREIGN KEY([BrandKey])
-	REFERENCES [datagen].[DimBrand] ([BrandKey])
+	REFERENCES [DimBrand] ([BrandKey])
 
 
-ALTER TABLE [datagen].[Sales]  WITH CHECK 
+ALTER TABLE [Sales]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimProduct] 
 	FOREIGN KEY([ProductKey])
-	REFERENCES [datagen].[DimProduct] ([ProductKey])
+	REFERENCES [DimProduct] ([ProductKey])
 
 
-ALTER TABLE [datagen].[Sales]  WITH CHECK 
+ALTER TABLE [Sales]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer] 
 	FOREIGN KEY([CustomerKey])
-	REFERENCES [datagen].[DimCustomer] ([CustomerKey])
+	REFERENCES [DimCustomer] ([CustomerKey])
 
 
-ALTER TABLE [datagen].[DimCustomer]  WITH CHECK 
+ALTER TABLE [DimCustomer]  WITH CHECK 
 	ADD  CONSTRAINT [FKdatagen_DimCustomer_DimGeography] 
 	FOREIGN KEY([GeographyKey])
-	REFERENCES [datagen].[DimGeography] ([GeographyKey])
+	REFERENCES [DimGeography] ([GeographyKey])
 
 	
 /*
 
 	INSERT THESE AFTER THE RUN TO VALIDATE
 
-ALTER TABLE [datagen].[DimVendor] 
+ALTER TABLE [DimVendor] 
 	CHECK CONSTRAINT [FKdatagen_DimVendor_DimBrand]
 
 
-ALTER TABLE [datagen].[DimProductSubcategory] 
+ALTER TABLE [DimProductSubcategory] 
 	CHECK CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory]
 
 
-ALTER TABLE [datagen].[DimProduct] 
+ALTER TABLE [DimProduct] 
 	CHECK CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory]
 
 
-ALTER TABLE [datagen].[Sales] 
+ALTER TABLE [Sales] 
 	CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimProduct]
 
 
-ALTER TABLE [datagen].[Sales] 
+ALTER TABLE [Sales] 
 	CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer]
 
 
-ALTER TABLE [datagen].[DimCustomer] 
+ALTER TABLE [DimCustomer] 
 	CHECK CONSTRAINT [FKdatagen_DimCustomer_DimGeography]
 
 
-ALTER TABLE [datagen].[DimProduct] 
+ALTER TABLE [DimProduct] 
 	CHECK CONSTRAINT FKdatagen_DimProduct_DimModel
 
 
-ALTER TABLE [datagen].[DimProduct] 
+ALTER TABLE [DimProduct] 
 	CHECK CONSTRAINT FKdatagen_DimProduct_DimBrand
 
 

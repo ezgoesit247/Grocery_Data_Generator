@@ -13,7 +13,9 @@
     </parent>
 
     <properties>
-    	<descriptor.filename>benerator.test.xml</descriptor.filename>
+    	<descriptor.filename>benerator.xml</descriptor.filename>
+	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
 	<packaging>jar</packaging>

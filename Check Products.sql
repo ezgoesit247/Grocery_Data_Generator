@@ -61,6 +61,5 @@ Union all
 select 'Quantity',Quantity,count(*) [cnt] from sales
 group by Quantity
 --order by Quantity
-) t 
+) t
 order by [lbl],[val],[cnt]
-  

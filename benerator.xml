@@ -16,11 +16,11 @@
 	 
     <database id="db"
         url="jdbc:sqlserver://host.docker.internal\\b95217afe721:1433;databaseName=AdventureWorksDW2016"
-        driver="com.microsoft.sqlserver.jdbc.SQLServerDriver"
-		catalog="AdventureWorksDW2016"
-        schema="datagen"
-        user="sa"
-        password="P@ssw0rd!"
+        driver="{database.driver}"
+		catalog="{database.name}"
+        schema="{database.schema}"
+        user="{database.user}"
+        password="{database.pwd}"
         batch="true"/>
 
 	<comment>Creating tables</comment>
@@ -57,32 +57,32 @@
 	-->
 	<execute uri="INSERT_BRIDGE_TABLE_DATA.sql" target="db" />
 
-	<generate type="DimProductCategory" consumer="db" minCount="{category.min.count}" maxCount="{category.max.count}">
 <!--
 	<generate type="DimProductCategory" consumer="db" minCount="1" maxCount="1">
 -->
+	<generate type="DimProductCategory" consumer="db" minCount="{category.min.count}" maxCount="{category.max.count}">
 		<id name="CategoryKey" generator="LocalSequenceGenerator" />
   		<attribute name="Category" pattern="[A-Z]{1}[a-z]{6,10}"/>
-		<generate type="DimProductSubcategory" consumer="db" minCount="{subcategory.min.count}" maxCount="{subcategory.max.count}">
 <!--
 		<generate type="DimProductSubcategory" consumer="db" minCount="1" maxCount="1">
 -->
+		<generate type="DimProductSubcategory" consumer="db" minCount="{subcategory.min.count}" maxCount="{subcategory.max.count}">
 			<id name="SubcategoryKey" generator="LocalSequenceGenerator" />
 			<attribute name="CategoryKey" script="{DimProductCategory.CategoryKey}"/>
 			<attribute name="Subcategory" pattern="[A-Z]{1}[a-z]{6,10}"/>
-			<generate type="DimProduct" consumer="db" minCount="{product.min.count}" maxCount="{product.max.count}">
+		</generate>
+	</generate>
 <!--
 			<generate type="DimProduct" consumer="db" minCount="1" maxCount="1">
 -->
-				<id name="ProductKey" generator="LocalSequenceGenerator" />
-				<attribute name="SubcategoryKey" script="{DimProductSubcategory.SubcategoryKey}"/>
-				<attribute name="Product" pattern="[A-Z]{1}[a-z]{14,20}"/>
-				<attribute name="BrandKey" pattern="{brand.key.pattern}"/>
-				<attribute name="ModelKey" pattern="{model.key.pattern}"/>
-	  			<attribute name="ListPrice" type="big_decimal" distribution="cumulated" pattern="{unitprice.pattern}"/>
-			</generate>
+		<generate type="DimProduct" consumer="db" minCount="{product.count}" maxCount="{product.count}">
+			<id name="ProductKey" generator="LocalSequenceGenerator" />
+			<reference name="SubcategoryKey" targetType="DimProductSubcategory" distribution="cumulated" source="db"/>
+			<attribute name="Product" unique="true" pattern="[A-Z]{1}[a-z]{14,20}"/>
+			<attribute name="BrandKey" pattern="{brand.key.pattern}"/>
+			<attribute name="ModelKey" pattern="{model.key.pattern}"/>
+  			<attribute name="ListPrice" type="big_decimal" distribution="cumulated" pattern="{unitprice.pattern}"/>
 		</generate>
-	</generate>
 		
 		<generate type="DimCustomer" consumer="db" minCount="{customer.count}" maxCount="{customer.count}">
   			<attribute name="CustomerKey" unique="true" pattern="{customer.key.pattern}"/>
