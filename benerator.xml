@@ -15,7 +15,7 @@
 	<include uri="benerator.properties" />
 	 
     <database id="db"
-        url="jdbc:sqlserver://host.docker.internal\\b95217afe721:1433;databaseName=AdventureWorksDW2016"
+        url="{database.url}"
         driver="{database.driver}"
 		catalog="{database.name}"
         schema="{database.schema}"
@@ -44,18 +44,24 @@
 		<attribute name="VendorKey" unique="true" pattern="{vendor.key.pattern}"/>
 		<attribute name="Vendor" pattern="[A-Z]{1}[a-z]{6,10}"/>
 	</generate>
-	<!-- 
-	<generate type="VendorBrand" consumer="db" count="30">
-		<reference name="VendorKey" targetType="DimVendor" distribution="random" source="db"/>
-		<reference name="BrandKey" targetType="DimBrand" distribution="random" source="db"/>
+
+	<generate type="VendorBrand" consumer="db" count="{vendorbrand.count}">
+		<attribute name="VendorKey" distribution="random" pattern="{vendor.key.pattern}"/>
+		<attribute name="BrandKey" distribution="cumulated" pattern="{brand.key.pattern}"/>
+		<!-- <reference name="VendorKey" targetType="DimVendor" distribution="cumulated" source="db"/>
+		<reference name="BrandKey" targetType="DimBrand" distribution="cumulated" source="db"/> -->
+		<attribute name="UK" unique="true" pattern="{vendorbrand.unique.pattern}"/>
 	</generate>
 	
-	<generate type="ModelVendor" consumer="db" count="20">
-		<reference name="ModelKey" targetType="DimModel" distribution="random" source="db"/>
-		<reference name="VendorKey" targetType="DimVendor" distribution="random" source="db"/>
+	<generate type="VendorModel" consumer="db" count="{vendormodel.count}">
+		<attribute name="VendorKey" distribution="cumulated" pattern="{vendor.key.pattern}"/>
+		<attribute name="ModelKey" distribution="random" pattern="{model.key.pattern}"/>
+		<!-- <reference name="VendorKey" targetType="DimVendor" distribution="cumulated" source="db"/>
+		<reference name="ModelKey" targetType="DimModel" distribution="cumulated" source="db"/> -->
+		<attribute name="UK" unique="true" pattern="{vendormodel.unique.pattern}"/>
 	</generate>
-	-->
-	<execute uri="INSERT_BRIDGE_TABLE_DATA.sql" target="db" />
+
+	<!-- <execute uri="INSERT_BRIDGE_TABLE_DATA.sql" target="db" /> -->
 
 <!--
 	<generate type="DimProductCategory" consumer="db" minCount="1" maxCount="1">

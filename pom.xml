@@ -1,70 +1,129 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
-
+    <groupId>com.datagen</groupId>
 	<artifactId>Grocery_Data_Generator</artifactId>
 	<version>1.0-SNAPSHOT</version>
-    <parent>
-	  <groupId>com.capgemini.datagen</groupId>
-	  <artifactId>DataGenParent</artifactId>
-    <relativePath>../DataGenParent/pom.xml</relativePath>
-	  <version>0.0.1-SNAPSHOT</version>
-    </parent>
+<!-- 
+	<parent>
+		<groupId>com.capgemini.datagen</groupId>
+		<artifactId>DataGenParent</artifactId>
+		<relativePath>../DataGenParent/pom.xml</relativePath>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+ -->
+	<properties>
+		<descriptor.filename>benerator.xml</descriptor.filename>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <properties>
-    	<descriptor.filename>benerator.xml</descriptor.filename>
-	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    </properties>
+		<jdbacl_version>0.8.19</jdbacl_version>
+		<version.dependencies.webdecs>0.7.1</version.dependencies.webdecs>
+		<commons_version>1.0.11</commons_version>
+		<contiperf_version>2.3.4</contiperf_version>
+		<version.dependencies.dbsanity>0.9.4</version.dependencies.dbsanity>
+		<formats_version>1.0.14</formats_version>
+		<validation_version>1.1.0.Final</validation_version>
+		<slf4j-api_version>1.7.30</slf4j-api_version>
+		<junit_version>4.12</junit_version>
+		<freemarker_version>2.3.21</freemarker_version>
+	</properties>
+
+
+	<dependencies>
+		<dependency>
+			<groupId>org.databene</groupId>
+			<artifactId>dbsanity</artifactId>
+			<version>${version.dependencies.dbsanity}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.databene</groupId>
+			<artifactId>jdbacl</artifactId>
+			<version>${jdbacl_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.databene</groupId>
+			<artifactId>databene-webdecs</artifactId>
+			<version>${version.dependencies.webdecs}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.databene</groupId>
+			<artifactId>databene-commons</artifactId>
+			<version>${commons_version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.databene</groupId>
+			<artifactId>contiperf</artifactId>
+			<version>${contiperf_version}</version>
+		</dependency>
+	</dependencies>
 
 	<packaging>jar</packaging>
 	<name>sqlserverdatagen data generation project</name>
 	<description>Start populating the database by typing 'mvn benerator:generate' on the command line.</description>
 
+	<repositories>
+		<repository>
+			<id>benerator-repo</id>
+			<url>http://databene.org/m2/</url>
+		</repository>
+	</repositories>
+
 	<build>
 		<plugins>
-            <plugin>
-                <groupId>org.databene</groupId>
-                <artifactId>benerator-maven-plugin</artifactId>
-                <version>0.9.8</version>
-                <configuration>
-                    <descriptor>${descriptor.filename}</descriptor>
-                </configuration>
-                
-                <dependencies>
+			<plugin>
+				<groupId>org.databene</groupId>
+				<artifactId>benerator-maven-plugin</artifactId>
+				<version>0.9.8</version>
+				<configuration>
+					<descriptor>${descriptor.filename}</descriptor>
+				</configuration>
+
+				<dependencies>
 					<dependency>
 						<groupId>com.microsoft.sqlserver</groupId>
 						<artifactId>mssql-jdbc</artifactId>
 						<version>8.2.2.jre8</version>
 					</dependency>
-                    <dependency>
-                        <groupId>org.apache.poi</groupId>
-                        <artifactId>poi</artifactId>
-                        <version>3.8</version>
-                        <scope>runtime</scope>
-                    </dependency>
+					<dependency>
+						<groupId>org.apache.poi</groupId>
+						<artifactId>poi</artifactId>
+						<version>3.8</version>
+						<scope>runtime</scope>
+					</dependency>
 
 					<!-- logging -->
-			        <dependency>
-			            <groupId>org.slf4j</groupId>
-			            <artifactId>slf4j-log4j12</artifactId>
-			            <version>1.6.4</version>
-			        </dependency>
-			        <dependency>
-			            <groupId>org.slf4j</groupId>
-			            <artifactId>slf4j-log4j12</artifactId>
-			            <version>1.6.4</version>
-                        <scope>runtime</scope>
-			        </dependency>
-                    <dependency>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                        <version>1.2.16</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            </plugins>
-            </build>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+						<version>1.6.4</version>
+					</dependency>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-log4j12</artifactId>
+						<version>1.6.4</version>
+						<scope>runtime</scope>
+					</dependency>
+					<dependency>
+						<groupId>log4j</groupId>
+						<artifactId>log4j</artifactId>
+						<version>1.2.16</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<encoding>UTF-8</encoding>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 
 </project>
