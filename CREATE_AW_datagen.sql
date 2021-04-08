@@ -365,37 +365,45 @@ ALTER TABLE [Sales]  WITH CHECK
 /*
 
 	INSERT THESE AFTER THE RUN TO VALIDATE
-
-ALTER TABLE [DimVendor] 
-	CHECK CONSTRAINT [FKdatagen_DimVendor_DimBrand]
+	
 
 
 ALTER TABLE [DimProductSubcategory] 
-	CHECK CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory]
+  CHECK CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory]
 
 
 ALTER TABLE [DimProduct] 
-	CHECK CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory]
+  CHECK CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory]
+
+
+ALTER TABLE [SalesLine] 
+  CHECK CONSTRAINT [FKdatagen_SalesLine_SalesOrderNumber]
 
 
 ALTER TABLE [Sales] 
-	CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimProduct]
+  CHECK CONSTRAINT [FKdatagen_Sales_SalesKey]
 
 
 ALTER TABLE [Sales] 
-	CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer]
+  CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimProduct]
+
+
+ALTER TABLE [Sales] 
+  CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer]
 
 
 ALTER TABLE [DimCustomer] 
-	CHECK CONSTRAINT [FKdatagen_DimCustomer_DimGeography]
+  CHECK CONSTRAINT [FKdatagen_DimCustomer_DimGeography]
 
 
 ALTER TABLE [DimProduct] 
-	CHECK CONSTRAINT FKdatagen_DimProduct_DimModel
+  CHECK CONSTRAINT FKdatagen_DimProduct_DimModel
 
 
 ALTER TABLE [DimProduct] 
-	CHECK CONSTRAINT FKdatagen_DimProduct_DimBrand
+  CHECK CONSTRAINT FKdatagen_DimProduct_DimBrand
+
+
 
 
 

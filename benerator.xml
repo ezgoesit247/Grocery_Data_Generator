@@ -119,4 +119,6 @@
 		<reference name="SalesKey" targetType="SalesLine" distribution="random" unique="true" source="db"/>
 	</generate>
 
+	<execute uri="CLEANUP_AW_datagen.sql" target="db" />
+
 </setup>
