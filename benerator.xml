@@ -11,6 +11,17 @@
 	<comment>
 		 Populates a database
 	</comment>
+
+    <bean id="dt" class="DateTimeGenerator"> 
+    	<property name="minDate" value="2019-07-01"/>
+    	<property name="maxDate" value="2019-12-31"/>
+    	<property name="dateGranularity" value="0000-00-01"/>
+    	<property name="dateDistribution" value="{new CumulatedSequence()}"/>
+    	<property name="minTime" value="09:00:00"/>
+    	<property name="maxTime" value="22:00:00"/>
+    	<property name="timeGranularity" value="00:00:01"/>
+    	<property name="timeDistribution" value="{new CumulatedSequence()}"/>
+	</bean>
 	 
 	<include uri="benerator.properties" />
 	 
@@ -28,93 +39,84 @@
 	<execute uri="CREATE_AW_datagen.sql" target="db" />
 	
 	<generate type="DimBrand" consumer="db" minCount="{brand.count}" maxCount="{brand.count}">
-		<!-- <id name="BrandKey" generator="LocalSequenceGenerator" /> -->
 		<attribute name="BrandKey" unique="true" pattern="{brand.key.pattern}"/>
 		<attribute name="Brand" pattern="[A-Z]{1}[a-z]{6,10}"/>
 	</generate>
-
- 			
 	<generate type="DimModel" consumer="db" minCount="{model.count}" maxCount="{model.count}">
-		<!-- <id name="ModelKey" generator="LocalSequenceGenerator" /> -->
 		<attribute name="ModelKey" unique="true" pattern="{model.key.pattern}"/>
 		<attribute name="Model" pattern="[A-Z]{1}[a-z]{6,10}"/>
 	</generate>
-	
 	<generate type="DimVendor" consumer="db" minCount="{vendor.count}" maxCount="{vendor.count}">
 		<attribute name="VendorKey" unique="true" pattern="{vendor.key.pattern}"/>
 		<attribute name="Vendor" pattern="[A-Z]{1}[a-z]{6,10}"/>
 	</generate>
-
 	<generate type="VendorBrand" consumer="db" count="{vendorbrand.count}">
-		<attribute name="VendorKey" distribution="random" pattern="{vendor.key.pattern}"/>
+		<attribute name="VendorKey" distribution="random" pattern="{vendor.key.pattern}"/><!--  validator="UniqueValidator" -->
 		<attribute name="BrandKey" distribution="cumulated" pattern="{brand.key.pattern}"/>
-		<!-- <reference name="VendorKey" targetType="DimVendor" distribution="cumulated" source="db"/>
-		<reference name="BrandKey" targetType="DimBrand" distribution="cumulated" source="db"/> -->
 		<attribute name="UK" unique="true" pattern="{vendorbrand.unique.pattern}"/>
 	</generate>
-	
 	<generate type="VendorModel" consumer="db" count="{vendormodel.count}">
 		<attribute name="VendorKey" distribution="cumulated" pattern="{vendor.key.pattern}"/>
 		<attribute name="ModelKey" distribution="random" pattern="{model.key.pattern}"/>
-		<!-- <reference name="VendorKey" targetType="DimVendor" distribution="cumulated" source="db"/>
-		<reference name="ModelKey" targetType="DimModel" distribution="cumulated" source="db"/> -->
 		<attribute name="UK" unique="true" pattern="{vendormodel.unique.pattern}"/>
 	</generate>
 
 	<!-- <execute uri="INSERT_BRIDGE_TABLE_DATA.sql" target="db" /> -->
 
-<!--
-	<generate type="DimProductCategory" consumer="db" minCount="1" maxCount="1">
--->
 	<generate type="DimProductCategory" consumer="db" minCount="{category.min.count}" maxCount="{category.max.count}">
 		<id name="CategoryKey" generator="LocalSequenceGenerator" />
   		<attribute name="Category" pattern="[A-Z]{1}[a-z]{6,10}"/>
-<!--
-		<generate type="DimProductSubcategory" consumer="db" minCount="1" maxCount="1">
--->
 		<generate type="DimProductSubcategory" consumer="db" minCount="{subcategory.min.count}" maxCount="{subcategory.max.count}">
 			<id name="SubcategoryKey" generator="LocalSequenceGenerator" />
 			<attribute name="CategoryKey" script="{DimProductCategory.CategoryKey}"/>
 			<attribute name="Subcategory" pattern="[A-Z]{1}[a-z]{6,10}"/>
 		</generate>
 	</generate>
-<!--
-			<generate type="DimProduct" consumer="db" minCount="1" maxCount="1">
--->
-		<generate type="DimProduct" consumer="db" minCount="{product.count}" maxCount="{product.count}">
-			<id name="ProductKey" generator="LocalSequenceGenerator" />
-			<reference name="SubcategoryKey" targetType="DimProductSubcategory" distribution="cumulated" source="db"/>
-			<attribute name="Product" unique="true" pattern="[A-Z]{1}[a-z]{14,20}"/>
-			<attribute name="BrandKey" pattern="{brand.key.pattern}"/>
-			<attribute name="ModelKey" pattern="{model.key.pattern}"/>
-  			<attribute name="ListPrice" type="big_decimal" distribution="cumulated" pattern="{unitprice.pattern}"/>
+	<generate type="DimProduct" consumer="db" minCount="{product.count / record.divisor}" maxCount="{product.count / record.divisor}">
+		<id name="ProductKey" generator="LocalSequenceGenerator" />
+		<reference name="SubcategoryKey" targetType="DimProductSubcategory" distribution="cumulated" source="db"/>
+		<attribute name="Product" unique="true" pattern="[A-Z]{1}[a-z]{14,20}"/>
+		<attribute name="BrandKey" pattern="{brand.key.pattern}"/>
+		<attribute name="ModelKey" pattern="{model.key.pattern}"/>
+ 			<attribute name="ListPrice" type="big_decimal" distribution="cumulated" pattern="{unitprice.pattern}"/>
+	</generate>
+	<generate type="DimCustomer" consumer="db" minCount="{customer.count}" maxCount="{customer.count}">
+ 			<attribute name="CustomerKey" unique="true" pattern="{customer.key.pattern}"/>
+ 			<reference name="GeographyKey" targetType="DimGeography" distribution="random" source="db"/>
+ 			<attribute name="FirstName"  pattern="{customer.firstname.pattern}"/>
+ 			<attribute name="LastName"  pattern="{customer.lastname.pattern}"/>
+	</generate>
+<!-- 
+	<generate type="SalesOrderNumber" consumer="db" count="{sales.count / record.divisor}">
+		<id name="SalesOrderNumber" generator="LocalSequenceGenerator" />
+		<attribute name="TransactionDate" type="date" source="dt" />
+		<generate type="Sales" consumer="db" minCount="{salesline.min}" maxCount="{salesline.max}">
+			<id name="SalesKey" mode="ignored" />
+			<reference name="ProductKey" targetType="DimProduct" distribution="random" source="db"/>
+			<reference name="CustomerKey" targetType="DimCustomer" distribution="random" source="db"/>
+			<attribute name="Quantity" distribution="wedge" pattern="{quantity.pattern}"/>
+			<attribute name="UnitPrice" distribution="cumulated" pattern="{unitprice.pattern}"/>
+			<attribute name="SalesOrderNumber" script="{SalesOrderNumber.SalesOrderNumber}"/>
+			<attribute name="LineNumber" distribution="wedge" unique="true" values="1,2,3,4,5"/>
 		</generate>
-		
-		<generate type="DimCustomer" consumer="db" minCount="{customer.count}" maxCount="{customer.count}">
-  			<attribute name="CustomerKey" unique="true" pattern="{customer.key.pattern}"/>
-  			<reference name="GeographyKey" targetType="DimGeography" distribution="random" source="db"/>
-  			<attribute name="FirstName"  pattern="{customer.firstname.pattern}"/>
-  			<attribute name="LastName"  pattern="{customer.lastname.pattern}"/>
+	</generate>
+ -->
+	<generate type="SalesOrderNumber" consumer="db" count="{sales.count / record.divisor}">
+		<id name="SalesOrderNumber" generator="LocalSequenceGenerator" />
+		<attribute name="TransactionDate" type="date" source="dt" />
+		<generate type="SalesLine" consumer="db" minCount="{salesline.min}" maxCount="{salesline.max}">
+			<id name="SalesKey" generator="LocalSequenceGenerator" />
+  			<attribute name="SalesOrderNumber" script="{SalesOrderNumber.SalesOrderNumber}"/>
+  			<attribute name="LineNumber" distribution="wedge" unique="true" values="{salesline.values}"/>
 		</generate>
-
-    <bean id="dt" class="DateTimeGenerator"> 
-    	<property name="minDate" value="2019-07-01"/>
-    	<property name="maxDate" value="2019-12-31"/>
-    	<property name="dateGranularity" value="0000-00-01"/>
-    	<property name="dateDistribution" value="{new CumulatedSequence()}"/>
-    	<property name="minTime" value="09:00:00"/>
-    	<property name="maxTime" value="22:00:00"/>
-    	<property name="timeGranularity" value="00:00:01"/>
-    	<property name="timeDistribution" value="{new CumulatedSequence()}"/>
-	</bean>
-		<generate type="Sales" consumer="db" count="{sales.count}">
-  			<reference name="ProductKey" targetType="DimProduct" distribution="random" source="db"/>
-  			<reference name="CustomerKey" targetType="DimCustomer" distribution="random" source="db"/>
-  			<attribute name="SalesOrderNumber" unique="true"/>
-  			<attribute name="SalesOrderLineNumber" />
-  			<attribute name="Quantity" distribution="random" pattern="{quantity.pattern}"/>
-  			<attribute name="TransactionDate" type="date" source="dt" />
-		</generate>
-
+	</generate>
+	
+	<generate type="Sales" consumer="db">
+		<reference name="ProductKey" targetType="DimProduct" distribution="random" source="db"/>
+		<reference name="CustomerKey" targetType="DimCustomer" distribution="random" source="db"/>
+		<attribute name="Quantity" distribution="wedge" pattern="{quantity.pattern}"/>
+		<attribute name="UnitPrice" distribution="cumulated" pattern="{unitprice.pattern}"/>
+		<reference name="SalesKey" targetType="SalesLine" distribution="random" unique="true" source="db"/>
+	</generate>
 
 </setup>

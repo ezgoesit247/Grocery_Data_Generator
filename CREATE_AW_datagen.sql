@@ -1,4 +1,6 @@
 DROP TABLE IF EXISTS [Sales]
+DROP TABLE IF EXISTS [SalesLine]
+DROP TABLE IF EXISTS [SalesOrderNumber]
 DROP TABLE IF EXISTS [VendorModel]
 DROP TABLE IF EXISTS [VendorBrand]
 DROP TABLE IF EXISTS [DimProduct]
@@ -26,7 +28,6 @@ CREATE TABLE [DimBrand](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [DimBrand] (BrandKey,Brand) VALUES (0,'No Brand')
   
   
 /*DimModel*/
@@ -40,7 +41,6 @@ CREATE TABLE [DimModel](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [DimModel] (ModelKey,Model) VALUES (0,'No Model')
   
 
 
@@ -57,7 +57,6 @@ CREATE TABLE [DimVendor](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [DimVendor] (VendorKey,Vendor) VALUES (0,'No Vendor')
 
 
 /*VendorBrand*/
@@ -72,8 +71,18 @@ CREATE TABLE [VendorBrand](
 --)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-CREATE UNIQUE INDEX vendorbrand_uidx
+CREATE UNIQUE INDEX [vendorbrand_uidx]
 ON [VendorBrand] (UK)
+
+ALTER TABLE [VendorBrand]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_VendorBrand_BrandKey] 
+  FOREIGN KEY([BrandKey])
+  REFERENCES [DimBrand] ([BrandKey])
+
+ALTER TABLE [VendorBrand]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_VendorBrand_VendorKey] 
+  FOREIGN KEY([VendorKey])
+  REFERENCES [DimVendor] ([VendorKey])
 
 /*VendorModel*/
 CREATE TABLE [VendorModel](
@@ -87,8 +96,18 @@ CREATE TABLE [VendorModel](
 --)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
   
-CREATE UNIQUE INDEX vendormodel_uidx
+CREATE UNIQUE INDEX [vendormodel_uidx]
 ON [VendorModel] (UK)
+
+ALTER TABLE [VendorModel]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_VendorModel_ModelKey] 
+  FOREIGN KEY([ModelKey])
+  REFERENCES [DimModel] ([ModelKey])
+
+ALTER TABLE [VendorModel]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_VendorModel_VendorKey] 
+  FOREIGN KEY([VendorKey])
+  REFERENCES [DimVendor] ([VendorKey])
 
 /*DimProductCategory*/
 CREATE TABLE [DimProductCategory](
@@ -101,7 +120,8 @@ CREATE TABLE [DimProductCategory](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [DimProductCategory] (CategoryKey,Category) VALUES (0,'No Category')
+
+
   
 
 /*DimProductSubcategory*/
@@ -115,8 +135,12 @@ CREATE TABLE [DimProductSubcategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
+ALTER TABLE [DimProductSubcategory]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory] 
+  FOREIGN KEY([CategoryKey])
+  REFERENCES [DimProductCategory] ([CategoryKey])
 
-  --INSERT INTO [DimProductSubcategory] (SubcategoryKey,CategoryKey,Subcategory) VALUES (0,0,'No Subcategory')
+
   
 
 /*DimProduct*/
@@ -144,8 +168,25 @@ CREATE TABLE [DimProduct](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [DimProduct] (ProductKey,SubcategoryKey,Product) VALUES (0,0,'No Product')
+ALTER TABLE [DimProduct]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory] 
+  FOREIGN KEY([SubcategoryKey])
+  REFERENCES [DimProductSubcategory] ([SubcategoryKey])
+
   
+ALTER TABLE [DimProduct]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_DimProduct_DimModel] 
+  FOREIGN KEY([ModelKey])
+  REFERENCES [DimModel] ([ModelKey])
+
+
+ALTER TABLE [DimProduct]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_DimProduct_DimBrand] 
+  FOREIGN KEY([BrandKey])
+  REFERENCES [DimBrand] ([BrandKey])
+
+
+
 
 /*Geography*/
 CREATE TABLE [DimGeography](
@@ -164,8 +205,7 @@ CREATE TABLE [DimGeography](
 ) ON [PRIMARY]
 
 
-  --INSERT INTO [DimGeography] (GeographyKey,City,StateProvinceCode,StateProvinceName,CountryRegionCode,CountryRegionName,PostalCode) VALUES (0,'No City','N/A','No State','N/A','No Country','00000')
-  
+
 
 INSERT INTO [DimGeography] (
 	[GeographyKey]
@@ -194,96 +234,134 @@ CREATE TABLE [DimCustomer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
+ALTER TABLE [DimCustomer]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_DimCustomer_DimGeography] 
+  FOREIGN KEY([GeographyKey])
+  REFERENCES [DimGeography] ([GeographyKey])
+ 
 
-
-  --INSERT INTO [DimCustomer] (CustomerKey,GeographyKey,FirstName,LastName) VALUES (0,0,'No First','No Last')
+  INSERT INTO [DimGeography] (GeographyKey,City,StateProvinceCode,StateProvinceName,CountryRegionCode,CountryRegionName,PostalCode) VALUES (0,'No City','N/A','No State','N/A','No Country','00000')
+  INSERT INTO [DimCustomer] (CustomerKey,GeographyKey,FirstName,LastName) VALUES (0,0,'No First','No Last')
+  INSERT INTO [DimVendor] (VendorKey,Vendor) VALUES (0,'No Vendor')
+  INSERT INTO [DimBrand] (BrandKey,Brand) VALUES (0,'No Brand')
+  INSERT INTO [DimModel] (ModelKey,Model) VALUES (0,'No Model')
+  INSERT INTO [DimProductCategory] (CategoryKey,Category) VALUES (0,'No Category')
+  INSERT INTO [DimProductSubcategory] (SubcategoryKey,CategoryKey,Subcategory) VALUES (0,0,'No Subcategory')
+  INSERT INTO [DimProduct] (ProductKey,SubcategoryKey,Product,ListPrice) VALUES (0,0,'No Product',0)
   
 
-/*Sales*/
-CREATE TABLE [Sales](
-	[ProductKey] [int] NOT NULL DEFAULT 0,
-	[CustomerKey] [int] NOT NULL DEFAULT 0,
-	[SalesOrderNumber] [nvarchar](20) NOT NULL,
-	[SalesOrderLineNumber] [tinyint] NOT NULL DEFAULT 1,
-	[Quantity] [smallint] NOT NULL DEFAULT 1,
-	[UnitPrice] [decimal](19,4) NOT NULL DEFAULT 0,
-	[TransactionDate] [datetime] NULL,
- CONSTRAINT [PKdatagen_FactInternetSales_SalesOrderNumber_SalesOrderLineNumber] PRIMARY KEY CLUSTERED 
+  
+CREATE TABLE [SalesOrderNumber](
+  [SalesOrderNumber] [bigint] NOT NULL default 0,
+  [TransactionDate] [datetime] NULL,
+ CONSTRAINT [PKdatagen_SalesOrderNumber_SalesOrderNumber] PRIMARY KEY CLUSTERED 
 (
-	[SalesOrderNumber] ASC,
-	[SalesOrderLineNumber] ASC
+  [SalesOrderNumber] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
 
 
 
+CREATE TABLE [SalesLine](
+  [SalesKey] [bigint] /*IDENTITY(1,1)*/ NOT NULL,
+  [SalesOrderNumber] [bigint] NOT NULL DEFAULT 0,
+  [LineNumber] [int] NOT NULL DEFAULT 1,
+ CONSTRAINT [PKdatagen_SalesLine_SalesOrderNumber_SalesOrderLineNumber] PRIMARY KEY CLUSTERED 
+(
+  [SalesKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+ALTER TABLE [SalesLine]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_SalesLine_SalesOrderNumber] 
+  FOREIGN KEY([SalesOrderNumber])
+  REFERENCES [SalesOrderNumber] ([SalesOrderNumber])
+
+CREATE UNIQUE NONCLUSTERED INDEX [salesordernumberline_uidx] ON [SalesLine]
+(
+  [SalesOrderNumber] ASC,
+  [LineNumber] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+
+
+/*Sales*/
+CREATE TABLE [Sales](
+  [SalesKey] [bigint] /*IDENTITY(1,1)*/ NOT NULL,
+	[ProductKey] [int] NOT NULL DEFAULT 0,
+	[CustomerKey] [int] NOT NULL DEFAULT 0,
+	[Quantity] [int] NOT NULL DEFAULT 1,
+	[UnitPrice] [decimal](19,4) NOT NULL DEFAULT 0,
+--  [SalesOrderNumber] [bigint] NOT NULL DEFAULT 0,
+--  [LineNumber] [int] NOT NULL DEFAULT 1
+ CONSTRAINT [PKdatagen_Sales_SalesKey] PRIMARY KEY CLUSTERED 
+(
+	[SalesKey] ASC
+) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+ALTER TABLE [Sales]  WITH CHECK 
+  ADD  CONSTRAINT [FKdatagen_Sales_SalesKey] 
+  FOREIGN KEY([SalesKey])
+  REFERENCES [SalesLine] ([SalesKey])
 
 
 
-ALTER TABLE [VendorBrand]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_VendorBrand_BrandKey] 
-	FOREIGN KEY([BrandKey])
-	REFERENCES [DimBrand] ([BrandKey])
 
-ALTER TABLE [VendorBrand]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_VendorBrand_VendorKey] 
-	FOREIGN KEY([VendorKey])
-	REFERENCES [DimVendor] ([VendorKey])
+/*SalesLine*/
+--CREATE TABLE [SalesLine](
+--  [SalesOrderNumber] [bigint] NOT NULL DEFAULT 0,
+--  [LineNumber] [int] NOT NULL DEFAULT 1,
+-- CONSTRAINT [PKdatagen_SalesLine_SalesOrderNumber_SalesOrderLineNumber] PRIMARY KEY CLUSTERED 
+--(
+--  [SalesOrderNumber] ASC,
+--  [LineNumber] ASC
+--)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+--) ON [PRIMARY]
 
+/*Sales*/
+--CREATE TABLE [Sales](
+--  [SalesKey] [bigint] IDENTITY(1,1) NOT NULL,
+--  [ProductKey] [int] NOT NULL DEFAULT 0,
+--  [CustomerKey] [int] NOT NULL DEFAULT 0,
+--  [Quantity] [int] NOT NULL DEFAULT 1,
+--  [UnitPrice] [decimal](19,4) NOT NULL DEFAULT 0,
+--  [SalesOrderNumber] [bigint] NOT NULL DEFAULT 0,
+--  [LineNumber] [int] NOT NULL DEFAULT 1
+-- ,CONSTRAINT [PKdatagen_Sales_SalesKey] PRIMARY KEY CLUSTERED 
+--(
+--  [SalesKey] ASC
+--) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+--) ON [PRIMARY]
+--
+--
+--CREATE UNIQUE NONCLUSTERED INDEX [salesordernumberline_uidx] ON [Sales]
+--(
+--  [SalesOrderNumber] ASC,
+--  [LineNumber] ASC
+--)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 
-ALTER TABLE [VendorModel]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_VendorModel_ModelKey] 
-	FOREIGN KEY([ModelKey])
-	REFERENCES [DimModel] ([ModelKey])
+--ALTER TABLE [Sales]  WITH CHECK 
+--  ADD  CONSTRAINT [FKdatagen_Sales_SalesOrderNumber] 
+--  FOREIGN KEY([SalesOrderNumber])
+--  REFERENCES [SalesOrderNumber] ([SalesOrderNumber])
 
-ALTER TABLE [VendorModel]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_VendorModel_VendorKey] 
-	FOREIGN KEY([VendorKey])
-	REFERENCES [DimVendor] ([VendorKey])
-
-ALTER TABLE [DimProductSubcategory]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory] 
-	FOREIGN KEY([CategoryKey])
-	REFERENCES [DimProductCategory] ([CategoryKey])
-
-
-ALTER TABLE [DimProduct]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory] 
-	FOREIGN KEY([SubcategoryKey])
-	REFERENCES [DimProductSubcategory] ([SubcategoryKey])
-
-	
-ALTER TABLE [DimProduct]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_DimProduct_DimModel] 
-	FOREIGN KEY([ModelKey])
-	REFERENCES [DimModel] ([ModelKey])
-
-
-ALTER TABLE [DimProduct]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_DimProduct_DimBrand] 
-	FOREIGN KEY([BrandKey])
-	REFERENCES [DimBrand] ([BrandKey])
 
 
 ALTER TABLE [Sales]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimProduct] 
-	FOREIGN KEY([ProductKey])
-	REFERENCES [DimProduct] ([ProductKey])
+  ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimProduct] 
+  FOREIGN KEY([ProductKey])
+  REFERENCES [DimProduct] ([ProductKey])
 
 
 ALTER TABLE [Sales]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer] 
-	FOREIGN KEY([CustomerKey])
-	REFERENCES [DimCustomer] ([CustomerKey])
+  ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer] 
+  FOREIGN KEY([CustomerKey])
+  REFERENCES [DimCustomer] ([CustomerKey])
 
 
-ALTER TABLE [DimCustomer]  WITH CHECK 
-	ADD  CONSTRAINT [FKdatagen_DimCustomer_DimGeography] 
-	FOREIGN KEY([GeographyKey])
-	REFERENCES [DimGeography] ([GeographyKey])
 
-	
+
 /*
 
 	INSERT THESE AFTER THE RUN TO VALIDATE
