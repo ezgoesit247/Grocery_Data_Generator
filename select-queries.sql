@@ -87,7 +87,6 @@ select p.Product, count(*) from DimProduct p
 group by Product
 having count(*) > 1
 -- DUPLICATE VENDORBRAND
-select COUNT(*) from VendorBrand;
 select SUM([Duplicates]) from (
 select VendorKey,BrandKey ,COUNT(*) [Duplicates]
 from VendorBrand
@@ -100,7 +99,6 @@ join VendorBrand vb1 on vb1.VendorKey = vb.VendorKey
   and vb1.BrandKey = vb.BrandKey
   and vb.UK > vb1.UK;
 -- DUPLICATE VENDORMODEL
-select COUNT(*) from VendorModel;
 select SUM([Duplicates]) from (
 select VendorKey,ModelKey ,COUNT(*) [Duplicates]
 from VendorModel
