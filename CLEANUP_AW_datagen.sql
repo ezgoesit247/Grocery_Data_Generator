@@ -1,11 +1,31 @@
-delete vb from VendorBrand vb
-join VendorBrand vb1 on vb1.VendorKey = vb.VendorKey
-  and vb1.BrandKey = vb.BrandKey
-  and vb.UK > vb1.UK;
-delete vm from VendorModel vm
-join VendorModel vm1 on vm1.VendorKey = vm.VendorKey
-  and vm1.ModelKey = vm.ModelKey
-  and vm.UK > vm1.UK;
+
+DELETE SUB FROM
+(SELECT ROW_NUMBER() OVER (PARTITION BY [VendorKey],[BrandKey] ORDER BY [VendorKey]) cnt
+ FROM [VendorBrand]) SUB
+WHERE SUB.cnt > 1
+
+DELETE SUB FROM
+(SELECT ROW_NUMBER() OVER (PARTITION BY [VendorKey],[ModelKey] ORDER BY [VendorKey]) cnt
+ FROM [VendorModel]) SUB
+WHERE SUB.cnt > 1
+
+
+CREATE UNIQUE CLUSTERED INDEX [PK_VendorBrand] ON [dbo].[VendorBrand]
+(
+  [VendorKey] ASC,
+  [BrandKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON
+) ON [PRIMARY]
+
+
+CREATE UNIQUE CLUSTERED INDEX [PK_VendorModel] ON [dbo].[VendorModel]
+(
+  [VendorKey] ASC,
+  [ModelKey] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON
+) ON [PRIMARY]
+
+
 
 ALTER TABLE [DimProductSubcategory] 
   CHECK CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory]

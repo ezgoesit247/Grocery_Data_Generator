@@ -62,17 +62,13 @@ CREATE TABLE [DimVendor](
 /*VendorBrand*/
 CREATE TABLE [VendorBrand](
 	[VendorKey] [int] NOT NULL DEFAULT 0,
-	[BrandKey] [int] NOT NULL DEFAULT 0,
-  [UK] [nvarchar](10) NULL
+	[BrandKey] [int] NOT NULL DEFAULT 0
 --, CONSTRAINT [PKdatagen_VendorBrand] PRIMARY KEY CLUSTERED 
 --(
 --	[VendorKey] ASC,
 --	[BrandKey] ASC
 --)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
-
-CREATE UNIQUE INDEX [vendorbrand_uidx]
-ON [VendorBrand] (UK)
 
 ALTER TABLE [VendorBrand]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_VendorBrand_BrandKey] 
@@ -87,8 +83,7 @@ ALTER TABLE [VendorBrand]  WITH CHECK
 /*VendorModel*/
 CREATE TABLE [VendorModel](
 	[VendorKey] [int] NOT NULL DEFAULT 0,
-  [ModelKey] [int] NOT NULL DEFAULT 0,
-  [UK] [nvarchar](10) NULL
+  [ModelKey] [int] NOT NULL DEFAULT 0
 --, CONSTRAINT [PKdatagen_VendorModel] PRIMARY KEY CLUSTERED 
 --(
 --	[VendorKey] ASC,
@@ -96,8 +91,6 @@ CREATE TABLE [VendorModel](
 --)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
   
-CREATE UNIQUE INDEX [vendormodel_uidx]
-ON [VendorModel] (UK)
 
 ALTER TABLE [VendorModel]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_VendorModel_ModelKey] 

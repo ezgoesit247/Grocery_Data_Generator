@@ -93,11 +93,11 @@ from VendorBrand
 group by VendorKey,BrandKey
 having COUNT(*) > 1
 ) t;
--- DELETE DUPS
-delete vb from VendorBrand vb
-join VendorBrand vb1 on vb1.VendorKey = vb.VendorKey
-  and vb1.BrandKey = vb.BrandKey
-  and vb.UK > vb1.UK;
+-- DELETE DUPS VENDORBRAND
+DELETE SUB FROM
+(SELECT ROW_NUMBER() OVER (PARTITION BY [VendorKey],[BrandKey] ORDER BY [VendorKey]) cnt
+ FROM [VendorBrand]) SUB
+WHERE SUB.cnt > 1
 -- DUPLICATE VENDORMODEL
 select SUM([Duplicates]) from (
 select VendorKey,ModelKey ,COUNT(*) [Duplicates]
@@ -105,9 +105,9 @@ from VendorModel
 group by VendorKey,ModelKey
 having COUNT(*) > 1
 ) t;
--- DELETE DUPS
-delete vm from VendorModel vm
-join VendorModel vm1 on vm1.VendorKey = vm.VendorKey
-  and vm1.ModelKey = vm.ModelKey
-  and vm.UK > vm1.UK;
+-- DELETE DUPS VENDORMODEL
+DELETE SUB FROM
+(SELECT ROW_NUMBER() OVER (PARTITION BY [VendorKey],[ModelKey] ORDER BY [VendorKey]) cnt
+ FROM [VendorModel]) SUB
+WHERE SUB.cnt > 1
   
