@@ -2,7 +2,7 @@
 <setup xmlns="http://databene.org/benerator/0.9.8"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://databene.org/benerator/0.9.8 benerator-0.9.8.xsd"
-        defaultPageSize="1000"
+        defaultPageSize="5000"
         defaultEncoding="Cp1252"
         defaultDataset="US"
         defaultLocale="en_US"

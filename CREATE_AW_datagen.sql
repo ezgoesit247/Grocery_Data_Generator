@@ -198,8 +198,6 @@ CREATE TABLE [DimGeography](
 ) ON [PRIMARY]
 
 
-
-
 INSERT INTO [DimGeography] (
 	[GeographyKey]
 	,[PostalCode]
