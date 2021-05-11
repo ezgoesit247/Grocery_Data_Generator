@@ -1,0 +1,4 @@
+--pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/init_database_scripts/database.sql) && popd
+--pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/init_database_scripts/insertzipcodes.sql) && popd
+--pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/init_database_scripts/schema.sql) && popd
+--pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/init_database_scripts/zipcodeimport.sql) && popd

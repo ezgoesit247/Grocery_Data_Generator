@@ -1,4 +1,3 @@
---pushd ~/sandbox && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/CREATE_DATABASE/insertzipcodes.sql) && popd
 insert into [GroceryStore].[datagen].[zip_code_import] (zip,primary_city,state,country) values
 ('00501','Holtsville','NY','US'),
 ('00544','Holtsville','NY','US'),
