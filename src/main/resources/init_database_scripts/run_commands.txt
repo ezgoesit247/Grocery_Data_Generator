@@ -9,5 +9,6 @@ pushd ~/sandbox/DatabaseStacks && docker exec $(./getcontainersqlserver) /opt/ms
 pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/src/main/resources/init_database_scripts/zipcodeimport.sql) && popd
 
 #insert [GroceryStore].[datagen].[zip_code_import] zip codes
-pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/src/main/resources/init_database_scripts/shortenedinsertzipcodes.sql) && popd
-
+docker cp ./newinsertzipcodes.sql $(~/sandbox/DatabaseStacks/getcontainersqlserver):/
+pushd ~/sandbox/DatabaseStacks && ./runfile "/newinsertzipcodes.sql" && popd
+pushd ~/sandbox/DatabaseStacks && ./runsql "select count (*) from [GroceryStore].[datagen].[zip_code_import]" && popd
