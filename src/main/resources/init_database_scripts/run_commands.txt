@@ -5,10 +5,11 @@ pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocer
 docker cp ./schema.sql $(~/sandbox/DatabaseStacks/getcontainersqlserver):/
 pushd ~/sandbox/DatabaseStacks && docker exec $(./getcontainersqlserver) /opt/mssql-tools/bin/sqlcmd -U sa -P P@ssw0rd! -d GroceryStore -i /schema.sql && popd
 
-#create [GroceryStore].[datagen].[zip_code_import]
-pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/src/main/resources/init_database_scripts/zipcodeimport.sql) && popd
+### #create [GroceryStore].[datagen].[zip_code_import]
+### pushd ~/sandbox/DatabaseStacks && ./runsql <<<echo $(cat ../assets.docker/grocery_data_generator/grocery_data_generator/src/main/resources/init_database_scripts/zipcodeimport.sql) && popd
 
 #insert [GroceryStore].[datagen].[zip_code_import] zip codes
-docker cp ./newinsertzipcodes.sql $(~/sandbox/DatabaseStacks/getcontainersqlserver):/
-pushd ~/sandbox/DatabaseStacks && ./runfile "/newinsertzipcodes.sql" && popd
+docker cp ./zipcodeimport.sql $(~/sandbox/DatabaseStacks/getcontainersqlserver):/
+pushd ~/sandbox/DatabaseStacks && ./runfile "/zipcodeimport.sql" && popd
+
 pushd ~/sandbox/DatabaseStacks && ./runsql "select count (*) from [GroceryStore].[datagen].[zip_code_import]" && popd
