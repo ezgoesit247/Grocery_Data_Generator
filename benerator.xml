@@ -36,7 +36,7 @@
 
 	<comment>Creating tables</comment>
 	
-	<execute uri="CREATE_AW_datagen.sql" target="db" />
+	<execute uri="{project.resources}/CREATE_AW_datagen.sql" target="db" />
 	
 	<generate type="DimBrand" consumer="db" minCount="{brand.count}" maxCount="{brand.count}">
 		<attribute name="BrandKey" unique="true" pattern="{brand.key.pattern}"/>
@@ -59,7 +59,7 @@
 		<attribute name="ModelKey" distribution="random" pattern="{model.key.pattern}"/>
 	</generate>
 
-	<!-- <execute uri="INSERT_BRIDGE_TABLE_DATA.sql" target="db" /> -->
+	<!-- <execute uri="{project.resources}/INSERT_BRIDGE_TABLE_DATA.sql" target="db" /> -->
 
 	<generate type="DimProductCategory" consumer="db" minCount="{category.min.count}" maxCount="{category.max.count}">
 		<id name="CategoryKey" generator="LocalSequenceGenerator" />
@@ -117,6 +117,6 @@
 		<reference name="SalesKey" targetType="SalesLine" distribution="random" unique="true" source="db"/>
 	</generate>
 
-	<execute uri="CLEANUP_AW_datagen.sql" target="db" />
+	<execute uri="{project.resources}/CLEANUP_AW_datagen.sql" target="db" />
 
 </setup>
