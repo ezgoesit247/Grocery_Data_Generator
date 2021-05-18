@@ -8,10 +8,25 @@ OUT=$FILE_PATH/$OUT_FILE
 RECS_PER_PAGE=1000
 HEADER='insert into [GroceryStore].[datagen].[zip_code_import] (zip,primary_city,state,country) values'
 
->read_lines && N=$RECS_PER_PAGE && for i in $(seq 1 `expr $N - 1`); do echo -n "read line${i} <&5 && "; done >read_lines && echo -n "read${N} <&5" >>read_lines
->print_lines && N=$RECS_PER_PAGE && for i in $(seq 1 `expr $N - 1`);do echo -n "\\n\$line$i"; done >print_lines && echo -n \\nsed \'s/,\$/\;/\' \<\<\<\$\(echo \$line$N\) >>print_lines
+#>read_lines_out && for i in $(seq 1 `expr ${RECS_PER_PAGE} - 1`); do echo -n "read line${i} <&5 && "; done >read_lines_out && echo -n "read${RECS_PER_PAGE} <&5" >>read_lines_out
+#>print_lines_out && for i in $(seq 1 `expr ${RECS_PER_PAGE} - 1`);do echo -n "\\n\$line$i"; done >print_lines_out && echo -n \\nsed \'s/,\$/\;/\' \<\<\<\$\(echo \${RECS_PER_PAGE}\) >>print_lines_out
 
+read_lines_out=read_lines.out
+function read_lines {
+  for i in $(seq 1 `expr ${RECS_PER_PAGE} - 1`); do 
+    echo -n "read line${i} <&5 && ";
+  done >${read_lines_out}
+  echo -n "read$RECS_PER_PAGE} <&5" >>${read_lines_out}
+}
+print_lines_out=print_lines.out
+function print_lines {
+  for i in $(seq 1 `expr ${RECS_PER_PAGE} - 1`); do 
+    echo -n "\\n\$line$i";
+  done >${print_lines_out}
+  echo -n \\nsed \'s/,\$/\;/\' \<\<\<\$\(echo \${RECS_PER_PAGE}\) >>${print_lines_out}
+}
 
+### main ()
 
 >$OUT
 exec 5<$IN
