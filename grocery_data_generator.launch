@@ -1,0 +1,20 @@
+#!/bin/sh
+APP=grocery_data_generator
+
+# docker run --network grocery_data_generator_network_dev --name grocery_datagenerator_database_dev -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=P@ssw0rd!' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2017-latest
+
+./assets.docker/grocery_data_generator/rundb $1
+DB_SERVER_CONTAINER=grocery_datagenerator_database_dev
+SQLCMD=/opt/mssql-tools/bin/sqlcmd
+DBUSER=sa
+DBPSWD='P@ssw0rd!'
+SRC_DIR=./assets.docker/grocery_data_generator/grocery_data_generator/src/main
+SQLSERVER_NAME=$(docker exec -it $DB_SERVER_CONTAINER /opt/mssql-tools/bin/sqlcmd -U ${DBUSER} -P ${DBPSWD} -h -1 -Q "set nocount on; select @@SERVERNAME")
+docker exec ${DB_SERVER_CONTAINER} ${SQLCMD} -U ${DBUSER} -P ${DBPSWD} -Q "$(cat ${SRC_DIR}/resources/init_database_scripts/database.sql)"
+docker cp ${SRC_DIR}/resources/init_database_scripts/schema.datagen.sql $DB_SERVER_CONTAINER:/
+docker exec ${DB_SERVER_CONTAINER} ${SQLCMD} -U ${DBUSER} -P ${DBPSWD} -d GroceryStore -i /schema.datagen.sql
+docker cp ${SRC_DIR}/resources/init_database_scripts/zipcodeimport.sql $DB_SERVER_CONTAINER:/
+docker exec ${DB_SERVER_CONTAINER} ${SQLCMD} -U ${DBUSER} -P ${DBPSWD} -d GroceryStore -i /zipcodeimport.sql
+
+./assets.docker/grocery_data_generator/dev $1
+progress Wed May 19 10:04:22 ~/sandbox$ 
