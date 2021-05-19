@@ -17,4 +17,3 @@ docker cp ${SRC_DIR}/resources/init_database_scripts/zipcodeimport.sql $DB_SERVE
 docker exec ${DB_SERVER_CONTAINER} ${SQLCMD} -U ${DBUSER} -P ${DBPSWD} -d GroceryStore -i /zipcodeimport.sql
 
 ./assets.docker/grocery_data_generator/dev $1
-progress Wed May 19 10:04:22 ~/sandbox$ 
