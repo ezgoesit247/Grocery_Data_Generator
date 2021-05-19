@@ -36,7 +36,7 @@
 
 	<comment>Creating tables</comment>
 	
-	<execute uri="{project.resources}/CREATE_AW_datagen.sql" target="db" />
+	<execute uri="{init.generation}" target="db" />
 	
 	<generate type="DimBrand" consumer="db" minCount="{brand.count}" maxCount="{brand.count}">
 		<attribute name="BrandKey" unique="true" pattern="{brand.key.pattern}"/>
@@ -117,6 +117,6 @@
 		<reference name="SalesKey" targetType="SalesLine" distribution="random" unique="true" source="db"/>
 	</generate>
 
-	<execute uri="{project.resources}/CLEANUP_AW_datagen.sql" target="db" />
+	<execute uri="{cleanup.generation}" target="db" />
 
 </setup>
