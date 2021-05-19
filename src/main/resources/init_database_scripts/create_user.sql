@@ -18,6 +18,9 @@ CREATE USER [groceryadmin] FOR LOGIN [groceryadmin] WITH DEFAULT_SCHEMA=[grocery
 GO
 
 
-EXEC sp_addrolemember N'db_owner', N'groceryadmin'
+ALTER AUTHORIZATION ON SCHEMA :: [grocery] to groceryadmin
+EXEC sp_addrolemember N'db_datawriter', N'groceryadmin'
+EXEC sp_addrolemember N'db_ddladmin', N'groceryadmin'
+EXEC sp_addrolemember N'db_accessadmin', N'groceryadmin'
 
 GO
