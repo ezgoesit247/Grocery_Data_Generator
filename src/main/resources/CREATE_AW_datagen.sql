@@ -1,24 +1,24 @@
-DROP TABLE IF EXISTS [Sales]
-DROP TABLE IF EXISTS [SalesLine]
-DROP TABLE IF EXISTS [SalesOrderNumber]
-DROP TABLE IF EXISTS [VendorModel]
-DROP TABLE IF EXISTS [VendorBrand]
-DROP TABLE IF EXISTS [DimProduct]
-DROP TABLE IF EXISTS [DimProductSubcategory]
-DROP TABLE IF EXISTS [DimProductCategory]
-DROP TABLE IF EXISTS [DimVendor]
-DROP TABLE IF EXISTS [DimBrand]
-DROP TABLE IF EXISTS [DimModel]
-DROP TABLE IF EXISTS [DimPromotion]
-DROP TABLE IF EXISTS [DimCurrency]
-DROP TABLE IF EXISTS [DimCustomer]
-DROP TABLE IF EXISTS [DimDate]
-DROP TABLE IF EXISTS [DimGeography]
-DROP TABLE IF EXISTS [DimSalesTerritory]
+DROP TABLE IF EXISTS [grocery].[Sales]
+DROP TABLE IF EXISTS [grocery].[SalesLine]
+DROP TABLE IF EXISTS [grocery].[SalesOrderNumber]
+DROP TABLE IF EXISTS [grocery].[VendorModel]
+DROP TABLE IF EXISTS [grocery].[VendorBrand]
+DROP TABLE IF EXISTS [grocery].[DimProduct]
+DROP TABLE IF EXISTS [grocery].[DimProductSubcategory]
+DROP TABLE IF EXISTS [grocery].[DimProductCategory]
+DROP TABLE IF EXISTS [grocery].[DimVendor]
+DROP TABLE IF EXISTS [grocery].[DimBrand]
+DROP TABLE IF EXISTS [grocery].[DimModel]
+DROP TABLE IF EXISTS [grocery].[DimPromotion]
+DROP TABLE IF EXISTS [grocery].[DimCurrency]
+DROP TABLE IF EXISTS [grocery].[DimCustomer]
+DROP TABLE IF EXISTS [grocery].[DimDate]
+DROP TABLE IF EXISTS [grocery].[DimGeography]
+DROP TABLE IF EXISTS [grocery].[DimSalesTerritory]
 
 
 /*DimBrand*/
-CREATE TABLE [DimBrand](
+CREATE TABLE [grocery].[DimBrand](
 	[BrandKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Brand] [nvarchar](50) NOT NULL,
  CONSTRAINT [PKdatagen_DimBrand_BrandKey] PRIMARY KEY CLUSTERED 
@@ -31,7 +31,7 @@ CREATE TABLE [DimBrand](
   
   
 /*DimModel*/
-CREATE TABLE [DimModel](
+CREATE TABLE [grocery].[DimModel](
 	[ModelKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Model] [nvarchar](50) NOT NULL,
  CONSTRAINT [PKdatagen_DimModel_ModelKey] PRIMARY KEY CLUSTERED 
@@ -45,7 +45,7 @@ CREATE TABLE [DimModel](
 
 
 /*DimVendor*/
-CREATE TABLE [DimVendor](
+CREATE TABLE [grocery].[DimVendor](
 	[VendorKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Vendor] [nvarchar](50) NOT NULL,
 	--[BrandKey] [int] NOT NULL DEFAULT 0,
@@ -60,7 +60,7 @@ CREATE TABLE [DimVendor](
 
 
 /*VendorBrand*/
-CREATE TABLE [VendorBrand](
+CREATE TABLE [grocery].[VendorBrand](
 	[VendorKey] [int] NOT NULL DEFAULT 0,
 	[BrandKey] [int] NOT NULL DEFAULT 0
 --, CONSTRAINT [PKdatagen_VendorBrand] PRIMARY KEY CLUSTERED 
@@ -70,18 +70,18 @@ CREATE TABLE [VendorBrand](
 --)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-ALTER TABLE [VendorBrand]  WITH CHECK 
+ALTER TABLE [grocery].[VendorBrand]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_VendorBrand_BrandKey] 
   FOREIGN KEY([BrandKey])
   REFERENCES [DimBrand] ([BrandKey])
 
-ALTER TABLE [VendorBrand]  WITH CHECK 
+ALTER TABLE [grocery].[VendorBrand]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_VendorBrand_VendorKey] 
   FOREIGN KEY([VendorKey])
   REFERENCES [DimVendor] ([VendorKey])
 
 /*VendorModel*/
-CREATE TABLE [VendorModel](
+CREATE TABLE [grocery].[VendorModel](
 	[VendorKey] [int] NOT NULL DEFAULT 0,
   [ModelKey] [int] NOT NULL DEFAULT 0
 --, CONSTRAINT [PKdatagen_VendorModel] PRIMARY KEY CLUSTERED 
@@ -92,18 +92,18 @@ CREATE TABLE [VendorModel](
 ) ON [PRIMARY]
   
 
-ALTER TABLE [VendorModel]  WITH CHECK 
+ALTER TABLE [grocery].[VendorModel]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_VendorModel_ModelKey] 
   FOREIGN KEY([ModelKey])
   REFERENCES [DimModel] ([ModelKey])
 
-ALTER TABLE [VendorModel]  WITH CHECK 
+ALTER TABLE [grocery].[VendorModel]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_VendorModel_VendorKey] 
   FOREIGN KEY([VendorKey])
   REFERENCES [DimVendor] ([VendorKey])
 
 /*DimProductCategory*/
-CREATE TABLE [DimProductCategory](
+CREATE TABLE [grocery].[DimProductCategory](
 	[CategoryKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Category] [nvarchar](50) NOT NULL,
  CONSTRAINT [PKdatagen_DimProductCategory_ProductCategoryKey] PRIMARY KEY CLUSTERED 
@@ -118,7 +118,7 @@ CREATE TABLE [DimProductCategory](
   
 
 /*DimProductSubcategory*/
-CREATE TABLE [DimProductSubcategory](
+CREATE TABLE [grocery].[DimProductSubcategory](
 	[SubcategoryKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[Subcategory] [nvarchar](50) NOT NULL,
 	[CategoryKey] [int] NOT NULL,
@@ -128,7 +128,7 @@ CREATE TABLE [DimProductSubcategory](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-ALTER TABLE [DimProductSubcategory]  WITH CHECK 
+ALTER TABLE [grocery].[DimProductSubcategory]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory] 
   FOREIGN KEY([CategoryKey])
   REFERENCES [DimProductCategory] ([CategoryKey])
@@ -137,7 +137,7 @@ ALTER TABLE [DimProductSubcategory]  WITH CHECK
   
 
 /*DimProduct*/
-CREATE TABLE [DimProduct](
+CREATE TABLE [grocery].[DimProduct](
 	[ProductKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[SubcategoryKey] [int] NOT NULL,
 	[StandardCost] [decimal](9,4) NULL,
@@ -161,19 +161,19 @@ CREATE TABLE [DimProduct](
 ) ON [PRIMARY]
 
 
-ALTER TABLE [DimProduct]  WITH CHECK 
+ALTER TABLE [grocery].[DimProduct]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory] 
   FOREIGN KEY([SubcategoryKey])
   REFERENCES [DimProductSubcategory] ([SubcategoryKey])
 
   
-ALTER TABLE [DimProduct]  WITH CHECK 
+ALTER TABLE [grocery].[DimProduct]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_DimProduct_DimModel] 
   FOREIGN KEY([ModelKey])
   REFERENCES [DimModel] ([ModelKey])
 
 
-ALTER TABLE [DimProduct]  WITH CHECK 
+ALTER TABLE [grocery].[DimProduct]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_DimProduct_DimBrand] 
   FOREIGN KEY([BrandKey])
   REFERENCES [DimBrand] ([BrandKey])
@@ -182,7 +182,7 @@ ALTER TABLE [DimProduct]  WITH CHECK
 
 
 /*Geography*/
-CREATE TABLE [DimGeography](
+CREATE TABLE [grocery].[DimGeography](
 	[GeographyKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[City] [nvarchar](30) NULL,
 	[StateProvinceCode] [nvarchar](3) NULL,
@@ -214,7 +214,7 @@ INSERT INTO [DimGeography] (
 
   
   /*DimCustomer*/
-CREATE TABLE [DimCustomer](
+CREATE TABLE [grocery].[DimCustomer](
 	[CustomerKey] [int] /*IDENTITY(1,1)*/ NOT NULL,
 	[GeographyKey] [int] NOT NULL,
 	[FirstName] [nvarchar](50) NULL,
@@ -225,7 +225,7 @@ CREATE TABLE [DimCustomer](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-ALTER TABLE [DimCustomer]  WITH CHECK 
+ALTER TABLE [grocery].[DimCustomer]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_DimCustomer_DimGeography] 
   FOREIGN KEY([GeographyKey])
   REFERENCES [DimGeography] ([GeographyKey])
@@ -242,7 +242,7 @@ ALTER TABLE [DimCustomer]  WITH CHECK
   
 
   
-CREATE TABLE [SalesOrderNumber](
+CREATE TABLE [grocery].[SalesOrderNumber](
   [SalesOrderNumber] [bigint] NOT NULL default 0,
   [TransactionDate] [datetime] NULL,
  CONSTRAINT [PKdatagen_SalesOrderNumber_SalesOrderNumber] PRIMARY KEY CLUSTERED 
@@ -254,7 +254,7 @@ CREATE TABLE [SalesOrderNumber](
 
 
 
-CREATE TABLE [SalesLine](
+CREATE TABLE [grocery].[SalesLine](
   [SalesKey] [bigint] /*IDENTITY(1,1)*/ NOT NULL,
   [SalesOrderNumber] [bigint] NOT NULL DEFAULT 0,
   [LineNumber] [int] NOT NULL DEFAULT 1,
@@ -264,7 +264,7 @@ CREATE TABLE [SalesLine](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-ALTER TABLE [SalesLine]  WITH CHECK 
+ALTER TABLE [grocery].[SalesLine]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_SalesLine_SalesOrderNumber] 
   FOREIGN KEY([SalesOrderNumber])
   REFERENCES [SalesOrderNumber] ([SalesOrderNumber])
@@ -277,7 +277,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [salesordernumberline_uidx] ON [SalesLine]
 
 
 /*Sales*/
-CREATE TABLE [Sales](
+CREATE TABLE [grocery].[Sales](
   [SalesKey] [bigint] /*IDENTITY(1,1)*/ NOT NULL,
 	[ProductKey] [int] NOT NULL DEFAULT 0,
 	[CustomerKey] [int] NOT NULL DEFAULT 0,
@@ -291,7 +291,7 @@ CREATE TABLE [Sales](
 ) WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 
-ALTER TABLE [Sales]  WITH CHECK 
+ALTER TABLE [grocery].[Sales]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_Sales_SalesKey] 
   FOREIGN KEY([SalesKey])
   REFERENCES [SalesLine] ([SalesKey])
@@ -300,7 +300,7 @@ ALTER TABLE [Sales]  WITH CHECK
 
 
 /*SalesLine*/
---CREATE TABLE [SalesLine](
+--CREATE TABLE [grocery].[SalesLine](
 --  [SalesOrderNumber] [bigint] NOT NULL DEFAULT 0,
 --  [LineNumber] [int] NOT NULL DEFAULT 1,
 -- CONSTRAINT [PKdatagen_SalesLine_SalesOrderNumber_SalesOrderLineNumber] PRIMARY KEY CLUSTERED 
@@ -311,7 +311,7 @@ ALTER TABLE [Sales]  WITH CHECK
 --) ON [PRIMARY]
 
 /*Sales*/
---CREATE TABLE [Sales](
+--CREATE TABLE [grocery].[Sales](
 --  [SalesKey] [bigint] IDENTITY(1,1) NOT NULL,
 --  [ProductKey] [int] NOT NULL DEFAULT 0,
 --  [CustomerKey] [int] NOT NULL DEFAULT 0,
@@ -332,20 +332,20 @@ ALTER TABLE [Sales]  WITH CHECK
 --  [LineNumber] ASC
 --)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 
---ALTER TABLE [Sales]  WITH CHECK 
+--ALTER TABLE [grocery].[Sales]  WITH CHECK 
 --  ADD  CONSTRAINT [FKdatagen_Sales_SalesOrderNumber] 
 --  FOREIGN KEY([SalesOrderNumber])
 --  REFERENCES [SalesOrderNumber] ([SalesOrderNumber])
 
 
 
-ALTER TABLE [Sales]  WITH CHECK 
+ALTER TABLE [grocery].[Sales]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimProduct] 
   FOREIGN KEY([ProductKey])
   REFERENCES [DimProduct] ([ProductKey])
 
 
-ALTER TABLE [Sales]  WITH CHECK 
+ALTER TABLE [grocery].[Sales]  WITH CHECK 
   ADD  CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer] 
   FOREIGN KEY([CustomerKey])
   REFERENCES [DimCustomer] ([CustomerKey])
@@ -359,39 +359,39 @@ ALTER TABLE [Sales]  WITH CHECK
 	
 
 
-ALTER TABLE [DimProductSubcategory] 
+ALTER TABLE [grocery].[DimProductSubcategory] 
   CHECK CONSTRAINT [FKdatagen_DimProductSubcategory_DimProductCategory]
 
 
-ALTER TABLE [DimProduct] 
+ALTER TABLE [grocery].[DimProduct] 
   CHECK CONSTRAINT [FKdatagen_DimProduct_DimProductSubcategory]
 
 
-ALTER TABLE [SalesLine] 
+ALTER TABLE [grocery].[SalesLine] 
   CHECK CONSTRAINT [FKdatagen_SalesLine_SalesOrderNumber]
 
 
-ALTER TABLE [Sales] 
+ALTER TABLE [grocery].[Sales] 
   CHECK CONSTRAINT [FKdatagen_Sales_SalesKey]
 
 
-ALTER TABLE [Sales] 
+ALTER TABLE [grocery].[Sales] 
   CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimProduct]
 
 
-ALTER TABLE [Sales] 
+ALTER TABLE [grocery].[Sales] 
   CHECK CONSTRAINT [FKdatagen_FactInternetSales_DimCustomer]
 
 
-ALTER TABLE [DimCustomer] 
+ALTER TABLE [grocery].[DimCustomer] 
   CHECK CONSTRAINT [FKdatagen_DimCustomer_DimGeography]
 
 
-ALTER TABLE [DimProduct] 
+ALTER TABLE [grocery].[DimProduct] 
   CHECK CONSTRAINT FKdatagen_DimProduct_DimModel
 
 
-ALTER TABLE [DimProduct] 
+ALTER TABLE [grocery].[DimProduct] 
   CHECK CONSTRAINT FKdatagen_DimProduct_DimBrand
 
 
