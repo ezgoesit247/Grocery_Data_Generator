@@ -10,7 +10,7 @@ DELETE SUB FROM
 WHERE SUB.cnt > 1
 
 
-CREATE UNIQUE CLUSTERED INDEX [PK_VendorBrand] ON [dbo].[VendorBrand]
+CREATE UNIQUE CLUSTERED INDEX [PK_VendorBrand] ON [VendorBrand]
 (
   [VendorKey] ASC,
   [BrandKey] ASC
@@ -18,7 +18,7 @@ CREATE UNIQUE CLUSTERED INDEX [PK_VendorBrand] ON [dbo].[VendorBrand]
 ) ON [PRIMARY]
 
 
-CREATE UNIQUE CLUSTERED INDEX [PK_VendorModel] ON [dbo].[VendorModel]
+CREATE UNIQUE CLUSTERED INDEX [PK_VendorModel] ON [VendorModel]
 (
   [VendorKey] ASC,
   [ModelKey] ASC
