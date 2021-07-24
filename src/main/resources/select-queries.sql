@@ -9,6 +9,12 @@ SELECT count(*) FROM DimVendor;
 SELECT count(*) FROM VendorProduct;
 SELECT count(*) FROM Sales;
 
+SELECT COUNT(*) as[Brands] FROM DimBrand;
+SELECT COUNT(*) as[Products] FROM DimProduct;
+SELECT COUNT(*) as[Models] FROM DimModel;
+SELECT COUNT(*) as[Subcategories] FROM DimProductSubcategory;
+SELECT COUNT(*) as[Vendors] FROM DimVendor;
+SELECT COUNT(*) as[Vendor Products] FROM VendorProduct;
 
 
 SELECT * FROM DimBrand;
